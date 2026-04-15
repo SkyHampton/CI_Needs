@@ -9,6 +9,7 @@ userID INT,
 username VARCHAR(32),
 password VARCHAR(32),
 banned BOOLEAN DEFAULT FALSE,
+admin BOOLEAN DEFAULT FALSE,
 PRIMARY KEY (userID));
 
 -- Table containing all data required for posts
@@ -36,4 +37,4 @@ CREATE TABLE CIN_Reply (
     PRIMARY KEY (replyID),
     FOREIGN KEY (userID) REFERENCES CIN_User (userID),
     FOREIGN KEY (postID) REFERENCES CIN_Post (postID)
-)
+);

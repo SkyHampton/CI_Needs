@@ -239,9 +239,10 @@
     }
 
     .ann-item {
-      font-size: 0.85rem;
+      font-size: 1rem;
       color: var(--blue);
       text-decoration: none;
+      font-weight: 700;
     }
 
     .ann-item:hover {
@@ -389,6 +390,8 @@
       align-items: center;
       font-size: 0.8rem;
       color: var(--mid-gray);
+      flex-wrap: wrap;
+      gap: 8px;
     }
 
     .respond-btn {
@@ -417,6 +420,311 @@
       border-radius: 3px;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+    }
+
+    /* ── FLAG BUTTON ── */
+    .flag-btn {
+      background: none;
+      border: none;
+      color: var(--mid-gray);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: 'Source Sans 3', sans-serif;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .flag-btn:hover {
+      color: #b85c00;
+      background: #fff0e0;
+    }
+
+    .flag-btn.flagged {
+      color: #b85c00;
+      background: #fff0e0;
+    }
+
+    /* ── COMMENTS SECTION ── */
+    .comments-section {
+      border-top: 1px solid var(--light-gray);
+      margin-top: 14px;
+      padding-top: 12px;
+    }
+
+    .comments-toggle {
+      background: none;
+      border: none;
+      color: var(--blue);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      font-family: 'Source Sans 3', sans-serif;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .comments-toggle:hover {
+      text-decoration: underline;
+    }
+
+    .comments-list {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .comments-list.open {
+      display: flex;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .comment-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--sage-dark);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .comment-bubble {
+      background: var(--off-white);
+      border: 1px solid var(--light-gray);
+      border-radius: 0 6px 6px 6px;
+      padding: 8px 12px;
+      flex: 1;
+    }
+
+    .comment-author {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+
+    .comment-text {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .comment-time {
+      font-size: 0.72rem;
+      color: var(--mid-gray);
+      margin-top: 3px;
+    }
+
+    .comment-input-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    .comment-input-row input {
+      flex: 1;
+      padding: 7px 12px;
+      border: 1.5px solid var(--light-gray);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-family: 'Source Sans 3', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .comment-input-row input:focus {
+      border-color: var(--blue);
+    }
+
+    .comment-submit {
+      background: var(--blue);
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+
+    .comment-submit:hover {
+      background: var(--blue-dark);
+    }
+
+    .guidelines-note {
+      font-size: 0.75rem;
+      color: var(--mid-gray);
+      margin-top: 6px;
+    }
+
+    .guidelines-note a {
+      color: var(--blue);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .guidelines-note a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── FLAG MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 8px;
+      padding: 28px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+      transform: translateY(12px);
+      transition: transform 0.2s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal h3 {
+      font-family: 'Merriweather', serif;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .modal p {
+      font-size: 0.85rem;
+      color: var(--mid-gray);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .modal label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 5px;
+    }
+
+    .modal select,
+    .modal textarea {
+      width: 100%;
+      border: 1.5px solid var(--light-gray);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--text);
+      background: white;
+      outline: none;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .modal select:focus,
+    .modal textarea:focus {
+      border-color: var(--blue);
+    }
+
+    .modal textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-flag-confirm {
+      background: var(--crimson);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .btn-flag-confirm:hover {
+      background: var(--crimson-dark);
+    }
+
+    .btn-flag-cancel {
+      background: white;
+      color: var(--mid-gray);
+      border: 1.5px solid var(--light-gray);
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .btn-flag-cancel:hover {
+      border-color: var(--mid-gray);
+      color: var(--dark);
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--dark);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+      white-space: nowrap;
     }
 
     /* ── SUBMIT FORM ── */
@@ -559,6 +867,16 @@
       color: var(--mid-gray);
     }
 
+    /* ── Post card photo ── */
+    .need-card-photo {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--crimson);
@@ -661,14 +979,14 @@
       <a href="https://www.csuci.edu/faculty/" target="_blank">Faculty</a>
       <a href="https://www.csuci.edu/staff/" target="_blank">Staff</a>
       <a href="https://www.csuci.edu/alumni/" target="_blank">Alumni</a>
-      <a href="login.html">CI Needs Login</a>
+      <a href="login.html" id="navLoginLink">CI Needs Login</a>
     </div>
   </div>
 
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <a class="logo" href="index.php">
+      <a class="logo" href="index.html">
         <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:46px; width:auto;" />
         <div class="logo-text">
           <span>California State University</span>
@@ -676,11 +994,16 @@
         </div>
       </a>
       <nav>
-        <a href="index.php" class="active">Home</a>
-        <a href="browse-needs.html">Browse Needs</a>
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
         <a href="resources.html">Resources</a>
         <a href="about.html">About</a>
         <a href="create-post.html" class="btn-nav">Create a Post</a>
+        <span id="navUserLabel"
+          style="display:none; font-size:0.88rem; font-weight:600; color:var(--mid-gray); padding: 6px 8px;"></span>
+        <a href="#" id="navLogoutLink"
+          style="display:none; font-size:0.88rem; font-weight:600; color:var(--crimson); padding:6px 10px;"
+          onclick="ciLogout()">Sign Out</a>
       </nav>
     </div>
   </header>
@@ -689,8 +1012,7 @@
   <div class="announcements-bar">
     <div class="inner">
       <span class="ann-label">Announcements</span>
-      <a class="ann-item" href="https://www.csuci.edu/basicneeds/food-assistance.htm">Spring 2026 Dolphin Pantry Hours
-        Mo-Tu 1-7pm, We-Th 1-6pm, Fr by appt only</a>
+      <a class="ann-item" href="community-guidelines.html">CI Needs Community Guidelines</a>
       <span class="ann-divider">|</span>
       <a class="ann-item" href="https://www.csuci.edu/basicneeds/resources.htm">On and Off-Campus Resources</a>
       <span class="ann-divider">|</span>
@@ -733,40 +1055,76 @@
         $password = "N3ph@ndus";
         $database = "cineedsc_db";
         #sql table and foreign key info
-        $table = "CIN_Post";
-        $jointable = "CIN_User";
-        $foreign_key = "userID";
+        $post_table = "CIN_Post";
+        $user_table = "CIN_User";
+        $reply_table = "CIN_Reply";
         try {
           #connect to database
           $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
           #perform query on database to get first 10 records in a joined result from the User and Post tables, execute for every record in the post table
-          foreach($db->query("SELECT * FROM $table INNER JOIN $jointable ON {$table}.$foreign_key={$jointable}.$foreign_key LIMIT 10") as $row){
+          foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON {$post_table}.userID={$user_table}.userID LIMIT 10") as $post_row){
             #get category for html tags
-            $category = $row["category"];
+            $category = $post_row["category"];
             $uc_category = ucfirst( $category );
 
             # optional image HTML
             $image_html = '';
-            if (!empty($row['imagePath'])) {
-                $safe_image = htmlspecialchars($row['imagePath'], ENT_QUOTES, 'UTF-8');
-                $safe_alt   = htmlspecialchars($row['postTitle'], ENT_QUOTES, 'UTF-8');
+            if (!empty($post_row['imagePath'])) {
+                $safe_image = htmlspecialchars($post_row['imagePath'], ENT_QUOTES, 'UTF-8');
+                $safe_alt   = htmlspecialchars($post_row['postTitle'], ENT_QUOTES, 'UTF-8');
                 $image_html = "<div class=\"need-card-image\">
                     <img src=\"{$safe_image}\" alt=\"{$safe_alt}\" />
                 </div>";
             }
 
             #html text for one card with info filled in
+            $reply_count = $db->query("SELECT COUNT(replyID) AS count FROM $reply_table WHERE postID = {$post_row['postID']}");
             $post_html = "<div class=\"need-card\">
             <div class=\"need-card-top\">
-            <div><h3>{$row['postTitle']}</h3>
-            </div><span class=\"tag tag-$category\">$uc_category</span>
+              <div>
+                <h3>{$post_row['postTitle']}</h3>
+              </div>
+              <span class=\"tag tag-$category\">$category</span>
             </div>
             {$image_html}
-            <p>{$row['postData']}</p>
+            <p>{$post_row['postData']}</p>
             <div class=\"need-card-meta\">
-            <span>Posted on {$row['postDate']} · {$row['username']}</span></div></div>";
-            #write post card to webpage
-            echo $post_html;
+              <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
+              <button class=\"respond-btn\">Respond</button>
+              <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
+            </div>
+
+            <!-- Comments Section -->
+            <div class=\"comments-section\">
+              <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
+              <div class=\"comments-list\">";
+              #write post card to webpage
+              echo $post_html;
+              
+              foreach($db->query("SELECT * FROM $reply_table INNER JOIN $user_table ON {$reply_table}.userID={$user_table}.userID WHERE postID = {$post_row["postID"]}") as $reply_row){
+              $comment_html = "
+                <div class=\"comment-item\">
+                  <div class=\"comment-avatar\"></div>
+                  <div class=\"comment-bubble\">
+                    <div class=\"comment-author\">{$reply_row["username"]}</div>
+                    <div class=\"comment-text\">{$reply_row["replyData"]}</div>
+                    <div class=\"comment-time\">Posted on {$reply_row["replyDate"]}</div>
+                  </div>
+                </div>";
+              echo $comment_html;
+              }
+
+              $userID = 1;
+              //TODO: userID currently is defaulted to 1, need to store userID in browser after signing in and update here
+              echo "</div><div class=\"comment-input-row\">
+                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']}, {$userID})\" />
+                <button class=\"comment-submit\" onclick=\"submitComment(this.previousElementSibling, {$post_row['postID']}, {$userID})\">➤</button>
+              </form></div>
+              <div class=\"guidelines-note\">
+                Be respectful and helpful. <a href=\"community-guidelines.html\">Community Guidelines</a>
+              </div>
+            </div>
+              </div>";
           }
           #catch error
         } catch (PDOException $e) {
@@ -774,9 +1132,7 @@
             die();
         }
         ?>
-      </div>
-    </div>
-
+      </div></div>
     <!-- RIGHT: Sidebar -->
     <div>
       <!-- Advanced Search -->
@@ -814,7 +1170,6 @@
         <!-- Date Search -->
         <div class="form-group">
           <label>Date Posted</label>
-          <!-- Toggle -->
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
             <span style="font-size:0.82rem; color:var(--mid-gray);">Single Date</span>
             <div id="dateToggle" onclick="toggleDateMode()"
@@ -825,15 +1180,11 @@
             </div>
             <span style="font-size:0.82rem; color:var(--mid-gray);">Date Range</span>
           </div>
-
-          <!-- Single date -->
           <div id="singleDateField">
             <input type="date" id="searchDate"
               style="width:100%; border:1.5px solid var(--light-gray); border-radius:4px; padding:9px 12px; font-size:0.9rem; font-family:'Source Sans 3',sans-serif; color:var(--text); background:white; transition:border-color 0.2s;" />
             <div style="font-size:0.78rem; color:var(--mid-gray); margin-top:4px;">Show posts from this day only.</div>
           </div>
-
-          <!-- Date range (hidden by default) -->
           <div id="dateRangeFields" style="display:none;">
             <div style="display:flex; align-items:center; gap:8px;">
               <div style="flex:1;">
@@ -898,50 +1249,43 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <strong style="font-size:1rem;">CSU Channel Islands / CI Needs</strong>
-          <p>A peer-to-peer student resource network built for the Dolphin community. Connecting students with needs to
-            those who can help.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Information For</h4>
-          <a href="https://www.csuci.edu/students/" target="_blank">Current Students</a>
-          <a href="https://www.csuci.edu/faculty/" target="_blank">Faculty</a>
-          <a href="https://www.csuci.edu/staff/" target="_blank">Staff</a>
-          <a href="https://www.csuci.edu/alumni/" target="_blank">Alumni</a>
-        </div>
-        <div class="footer-col">
-          <h4>Resources</h4>
-          <a href="https://www.csuci.edu/basicneeds/food-assistance.htm" target="_blank">Food Assistance</a>
-          <a href="https://www.csuci.edu/financialaid/" target="_blank">Financial Aid</a>
-          <a href="https://www.csuci.edu/studenthealth/" target="_blank">Health Services</a>
-          <a href="https://www.csuci.edu/caps/" target="_blank">Counseling and Psychological Services</a>
-        </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <a href="https://www.csuci.edu/contact.htm?ftcontact" target="_blank">Contact Us</a>
-          <a href="https://www.csuci.edu/emergencyinfo/" target="_blank">Emergency Info</a>
-          <a href="https://maps.csuci.edu/" target="_blank">Campus Map</a>
-        </div>
+  <!-- FLAG MODAL -->
+  <div class="modal-overlay" id="flagModal" onclick="if(event.target===this) closeFlagModal()">
+    <div class="modal">
+      <h3>🚩 Flag This Post</h3>
+      <p>Help keep CI Needs safe. Flagged posts are reviewed by our team. Please only flag posts that genuinely violate
+        our guidelines.</p>
+      <label for="flagReason">Reason for flagging <span style="color:var(--crimson)">*</span></label>
+      <select id="flagReason">
+        <option value="">Select a reason…</option>
+        <option value="scam">Possible scam or fraudulent offer</option>
+        <option value="inappropriate">Inappropriate or offensive content</option>
+        <option value="spam">Spam or duplicate post</option>
+        <option value="commercial">Commercial solicitation / advertising</option>
+        <option value="illegal">Illegal item or activity</option>
+        <option value="harassment">Harassment or hate speech</option>
+        <option value="wellbeing">Concerns about a student's wellbeing</option>
+        <option value="other">Other</option>
+      </select>
+      <label for="flagComment">Additional comments <span
+          style="font-weight:400; color:var(--mid-gray);">(optional)</span></label>
+      <textarea id="flagComment"
+        placeholder="Any additional context that might help our team review this post…"></textarea>
+      <div style="font-size:0.78rem; color:var(--mid-gray); margin-bottom:14px;">
+        Your report is anonymous — the poster will not see who flagged their post.
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2026 California State University Channel Islands &middot; 1 University Dr., Camarillo, CA 93012
-          &middot; 805-437-8400</span>
-        <div class="footer-links">
-          <a href="https://www.csuci.edu/titleix/annual-report/clery/annual-security-report.htm" target="_blank">Annual
-            Security Report</a>
-          <a href="https://www.csuci.edu/titleix/" target="_blank">Title IX</a>
-          <a href="https://www.csuci.edu/legal/" target="_blank">Legal</a>
-        </div>
+      <div class="modal-actions">
+        <button class="btn-flag-confirm" onclick="submitFlag()">Submit Report</button>
+        <button class="btn-flag-cancel" onclick="closeFlagModal()">Cancel</button>
       </div>
     </div>
-  </footer>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast">Done</div>
 
   <script>
+    // ── Filter buttons ──
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -949,6 +1293,7 @@
       });
     });
 
+    // ── Advanced Search ──
     function handleAdvancedSearch() {
       const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
       const category = document.getElementById('searchCategory').value;
@@ -958,11 +1303,8 @@
       const singleDate = document.getElementById('searchDate').value;
       const dateFrom = document.getElementById('searchDateFrom').value;
       const dateTo = document.getElementById('searchDateTo').value;
-
       // TODO: Replace with real API call to GET /api/posts
-      // Pass: { keyword, category, creator, type, dateMode, singleDate, dateFrom, dateTo }
       console.log('Advanced search:', { keyword, category, creator, type, dateMode, singleDate, dateFrom, dateTo });
-
       alert(`Search ready to connect to backend!\nKeyword: "${keyword}"\nCategory: "${category}"\nPosted by: "${creator}"\nType: "${type}"\nDate mode: "${dateMode}"\n${dateMode === 'single' ? 'Date: ' + singleDate : 'From: ' + dateFrom + '  To: ' + dateTo}`);
     }
 
@@ -972,16 +1314,13 @@
       const single = document.getElementById('singleDateField');
       const range = document.getElementById('dateRangeFields');
       const isRange = toggle.dataset.mode === 'range';
-
       if (isRange) {
-        // Switch to single
         toggle.dataset.mode = 'single';
         toggle.style.background = 'var(--light-gray)';
         thumb.style.left = '3px';
         single.style.display = 'block';
         range.style.display = 'none';
       } else {
-        // Switch to range
         toggle.dataset.mode = 'range';
         toggle.style.background = 'var(--blue)';
         thumb.style.left = '21px';
@@ -998,7 +1337,6 @@
       document.getElementById('searchDate').value = '';
       document.getElementById('searchDateFrom').value = '';
       document.getElementById('searchDateTo').value = '';
-      // Reset toggle to single date mode
       const toggle = document.getElementById('dateToggle');
       const thumb = document.getElementById('dateToggleThumb');
       toggle.dataset.mode = 'single';
@@ -1008,7 +1346,95 @@
       document.getElementById('dateRangeFields').style.display = 'none';
     }
 
+    // ── Flag modal ──
+    let currentFlagBtn = null;
+    function openFlagModal(btn) {
+      currentFlagBtn = btn;
+      document.getElementById('flagReason').value = '';
+      document.getElementById('flagComment').value = '';
+      document.getElementById('flagModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeFlagModal() {
+      document.getElementById('flagModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function submitFlag() {
+      const reason = document.getElementById('flagReason').value;
+      if (!reason) { alert('Please select a reason for flagging.'); return; }
+      // TODO: POST /api/flags { postId, reason, comment }
+      closeFlagModal();
+      if (currentFlagBtn) {
+        currentFlagBtn.textContent = '🚩 Flagged';
+        currentFlagBtn.classList.add('flagged');
+        currentFlagBtn.disabled = true;
+      }
+      showToast('🚩 Post reported. Thank you — our team will review it.');
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlagModal(); });
 
+    // ── Comments ──
+    function toggleComments(btn) {
+      const list = btn.nextElementSibling;
+      const open = list.classList.toggle('open');
+      const count = list.querySelectorAll('.comment-item').length;
+      btn.textContent = '💬 ' + count + ' comment' + (count !== 1 ? 's' : '') + ' — ' + (open ? 'hide' : 'show');
+    }
+
+    function submitComment(input, postID, userID) {
+      const text = input.value.trim();
+      const formData = new FormData();
+      formData.append('replyData', text);
+      formData.append('postID', postID);
+      formData.append('userID', userID);
+
+      fetch('post-comment.php', {
+        method: 'POST',
+        body: formData
+      });
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    }
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 3000);
+    }
+
+    // ── CI Needs session sync ──
+    function ciGetUser() {
+      try { return JSON.parse(sessionStorage.getItem('ci_user')); } catch (e) { return null; }
+    }
+    function ciLogout() {
+      sessionStorage.removeItem('ci_user');
+      localStorage.removeItem('ci_profile');
+      window.location.href = 'index.html';
+    }
+    function ciSyncNav() {
+      const user = ciGetUser();
+      const loginLink = document.getElementById('navLoginLink');
+      const logoutLink = document.getElementById('navLogoutLink');
+      const userLabel = document.getElementById('navUserLabel');
+      if (user) {
+        if (loginLink) loginLink.style.display = 'none';
+        if (logoutLink) logoutLink.style.display = 'inline';
+        if (userLabel) {
+          userLabel.textContent = 'Hi, ' + (user.firstName || user.email.split('@')[0]);
+          userLabel.style.display = 'inline';
+        }
+      } else {
+        if (loginLink) loginLink.style.display = 'inline';
+        if (logoutLink) logoutLink.style.display = 'none';
+        if (userLabel) userLabel.style.display = 'none';
+      }
+    }
+    ciSyncNav();
   </script>
 
 </body>
