@@ -39,20 +39,27 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
+    
     $stmt = $db->prepare("SELECT * FROM CIN_User WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$userData || !password_verify($password_input, $userData["password"])) {
+    error_log($userData['banned']);
+    if ($userData['banned']) {
+        http_response_code(401);
+        respond(false, "You have been banned.");
+    }
+
+    if (!$userData || $password_input != $userData['password']) {
         http_response_code(401);
         respond(false, "Invalid email or password.");
     }
 
     /* ── Set session ── */
-    $_SESSION["userID"] = $userData["userID"];
-    $_SESSION["role"]   = $userData["role"] ?? "user";
+    $_SESSION["userID"] = $userData['userID'];
+    $_SESSION["admin"]   = $userData['admin'];
 
-    respond(true, "Login successful.", ["role" => $_SESSION["role"]]);
+    respond(true, "Login successful.", ["admin" => $_SESSION["admin"], "userID" => $_SESSION["userID"]]);
 
 } catch (PDOException $e) {
     http_response_code(500);

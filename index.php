@@ -1125,6 +1125,15 @@
                 <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
                 <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
               </div>
+              <span class=\"tag tag-$category\">$category</span>
+            </div>
+            {$image_html}
+            <p>{$post_row['postData']}</p>
+            <div class=\"need-card-meta\">
+              <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
+              <button class=\"respond-btn\">Respond</button>
+              <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
+            </div>
 
               <!-- Comments Section -->
               <div class=\"comments-section\">
@@ -1144,7 +1153,7 @@
               {$image_html}
               <p>{$post_row['postData']}</p>
               <div class=\"need-card-meta\">
-                <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
+                <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
                 <button class=\"respond-btn\">Respond</button>
                 <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
               </div>
@@ -1162,7 +1171,7 @@
                 <div class=\"comment-item\">
                   <div class=\"comment-avatar\"></div>
                   <div class=\"comment-bubble\">
-                    <div class=\"comment-author\">{$reply_row["username"]}</div>
+                    <div class=\"comment-author\">{$reply_row['username']}({$reply_row['email']})</div>
                     <div class=\"comment-text\">{$reply_row["replyData"]}</div>
                     <div class=\"comment-time\">Posted on {$reply_row["replyDate"]}</div>
                   </div>
@@ -1170,10 +1179,8 @@
               echo $comment_html;
               }
 
-              $userID = 1;
-              //TODO: userID currently is defaulted to 1, need to store userID in browser after signing in and update here
               echo "</div><div class=\"comment-input-row\">
-                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']}, {$userID})\" />
+                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']})\" />
                 <button class=\"comment-submit\" onclick=\"submitComment(this.previousElementSibling, {$post_row['postID']}, {$userID})\">➤</button>
               </form></div>
               <div class=\"guidelines-note\">
@@ -1437,9 +1444,10 @@
       btn.textContent = '💬 ' + count + ' comment' + (count !== 1 ? 's' : '') + ' — ' + (open ? 'hide' : 'show');
     }
 
-    function submitComment(input, postID, userID) {
+    function submitComment(input, postID) {
       const text = input.value.trim();
       const formData = new FormData();
+      const userID = sessionStorage.getItem("userID");
       formData.append('replyData', text);
       formData.append('postID', postID);
       formData.append('userID', userID);
