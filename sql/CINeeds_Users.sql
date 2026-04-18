@@ -1,8 +1,8 @@
 USE cineedsc_db;
 
-INSERT INTO CIN_User (userID, username, password) VALUES 
-(1, "John Doe", "1234"),
-(2, "Mary Jane", "QWERTY"),
-(3, "Bob Robert", "password1");
+INSERT INTO CIN_User (email, username, password) VALUES 
+("john@myci.csuci.edu", "John Doe", "1234"),
+("mary@myci.csuci.edu", "Mary Jane", "QWERTY"),
+("bob@myci.csuci.edu", "Bob Robert", "password1");
 
 SELECT * FROM CIN_User;

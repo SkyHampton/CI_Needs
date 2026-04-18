@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS CIN_Post;
 DROP TABLE IF EXISTS CIN_User;
 -- Table containing user login info
 CREATE TABLE CIN_User (
-userID INT,
+userID INT AUTO_INCREMENT,
+email VARCHAR(32),
 username VARCHAR(32),
 password VARCHAR(32),
 banned BOOLEAN DEFAULT FALSE,
