@@ -39,11 +39,12 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
+    error_log($email);
     $stmt = $db->prepare("SELECT * FROM CIN_User WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$userData || !password_verify($password_input, $userData["password"])) {
+    if (!$userData || $password_input != $userData["password"]) {
         http_response_code(401);
         respond(false, "Invalid email or password.");
     }
