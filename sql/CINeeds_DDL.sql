@@ -50,3 +50,30 @@ CREATE TABLE CIN_Flag (
     PRIMARY KEY (flagID),
     FOREIGN KEY (postID) REFERENCES CIN_Post (postID)
 );
+
+
+CREATE TABLE CIN_Graveyard (
+    graveyardID  INT AUTO_INCREMENT,
+    postID       INT,
+    adminID      INT,
+    userID       INT,
+
+    postType     VARCHAR(8),
+    category     VARCHAR(16),
+    postTitle    VARCHAR(32),
+    postData     TINYTEXT,
+    postDate     DATE,
+
+    imagePath    VARCHAR(255) DEFAULT NULL,
+    contact      VARCHAR(255) DEFAULT NULL,
+
+    flagCount    INT DEFAULT 0,
+    reason       VARCHAR(255),
+    deletedDate  DATE,
+
+    PRIMARY KEY (graveyardID),
+
+    FOREIGN KEY (postID) REFERENCES CIN_Post(postID),
+    FOREIGN KEY (userID) REFERENCES CIN_User(userID),
+    FOREIGN KEY (adminID) REFERENCES CIN_User(userID)
+);
