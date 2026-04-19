@@ -8,7 +8,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600;700&display=swap"
     rel="stylesheet" />
-  <style>
+<style>
     :root {
       --crimson: #c21228;
       --crimson-dark: #b41414;
@@ -421,6 +421,37 @@
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
+    /* ── FULFILLED RIBBON ── */
+.need-card.fulfilled {
+  border-left-color: #2a7a4b;
+  opacity: 0.82;
+}
+.fulfilled-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #edf7f2;
+  color: #2a7a4b;
+  border: 1.5px solid #a3d9bc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.need-card.fulfilled .need-card-top h3 {
+  color: var(--mid-gray);
+  text-decoration: line-through;
+  text-decoration-color: #a3d9bc;
+}
+.need-card.fulfilled .respond-btn {
+  display: none;
+}
+.need-card.fulfilled .flag-btn {
+  display: none;
+}
 
     /* ── FLAG BUTTON ── */
     .flag-btn {
@@ -1079,25 +1110,59 @@
 
             #html text for one card with info filled in
             $reply_count = $db->query("SELECT COUNT(replyID) AS count FROM $reply_table WHERE postID = {$post_row['postID']}");
-            $post_html = "<div class=\"need-card\">
-            <div class=\"need-card-top\">
-              <div>
-                <h3>{$post_row['postTitle']}</h3>
+            $isFulfulled = (bool)$post_row['fulfilled'];
+            if (!$isFulfulled){
+              $post_html = "<div class=\"need-card\">
+              <div class=\"need-card-top\">
+                <div>
+                  <h3>{$post_row['postTitle']}</h3>
+                </div>
+                <span class=\"tag tag-$category\">$category</span>
+              </div>
+              {$image_html}
+              <p>{$post_row['postData']}</p>
+              <div class=\"need-card-meta\">
+                <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
+                <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
               </div>
               <span class=\"tag tag-$category\">$category</span>
             </div>
             {$image_html}
             <p>{$post_row['postData']}</p>
             <div class=\"need-card-meta\">
-              <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
+              <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
               <button class=\"respond-btn\">Respond</button>
               <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
             </div>
 
-            <!-- Comments Section -->
-            <div class=\"comments-section\">
-              <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
-              <div class=\"comments-list\">";
+              <!-- Comments Section -->
+              <div class=\"comments-section\">
+                <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
+                <div class=\"comments-list\">";
+            } else {
+              $post_html = "<div class=\"need-card fulfilled\">
+              <div class=\"need-card-top\">
+                <div>
+                  <h3>{$post_row['postTitle']}</h3>
+                </div>
+                <div style=\"display:flex; gap:6px; align-items:center; flex-shrink:0;\">
+                <span class=\"tag tag-$category\">$category</span>
+                <span class=\"fulfilled-ribbon\"> Fulfilled</span>
+                </div>
+              </div>
+              {$image_html}
+              <p>{$post_row['postData']}</p>
+              <div class=\"need-card-meta\">
+                <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
+                <button class=\"respond-btn\">Respond</button>
+                <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
+              </div>
+
+              <!-- Comments Section -->
+              <div class=\"comments-section\">
+                <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
+                <div class=\"comments-list\">";
+            }
               #write post card to webpage
               echo $post_html;
               
@@ -1106,7 +1171,7 @@
                 <div class=\"comment-item\">
                   <div class=\"comment-avatar\"></div>
                   <div class=\"comment-bubble\">
-                    <div class=\"comment-author\">{$reply_row["username"]}</div>
+                    <div class=\"comment-author\">{$reply_row['username']}({$reply_row['email']})</div>
                     <div class=\"comment-text\">{$reply_row["replyData"]}</div>
                     <div class=\"comment-time\">Posted on {$reply_row["replyDate"]}</div>
                   </div>
@@ -1114,10 +1179,8 @@
               echo $comment_html;
               }
 
-              $userID = 1;
-              //TODO: userID currently is defaulted to 1, need to store userID in browser after signing in and update here
               echo "</div><div class=\"comment-input-row\">
-                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']}, {$userID})\" />
+                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']})\" />
                 <button class=\"comment-submit\" onclick=\"submitComment(this.previousElementSibling, {$post_row['postID']}, {$userID})\">➤</button>
               </form></div>
               <div class=\"guidelines-note\">
@@ -1381,9 +1444,10 @@
       btn.textContent = '💬 ' + count + ' comment' + (count !== 1 ? 's' : '') + ' — ' + (open ? 'hide' : 'show');
     }
 
-    function submitComment(input, postID, userID) {
+    function submitComment(input, postID) {
       const text = input.value.trim();
       const formData = new FormData();
+      const userID = sessionStorage.getItem("userID");
       formData.append('replyData', text);
       formData.append('postID', postID);
       formData.append('userID', userID);

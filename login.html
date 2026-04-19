@@ -107,8 +107,8 @@
   </div>
 
   <script>
-    function handleLogin() {
-      const email = document.getElementById('email').value.trim();
+    async function handleLogin() {
+      const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
 
       if (!email || !password) {
@@ -116,8 +116,28 @@
         return;
       }
 
-      // this section with be replaced with real auth logic in future sprints
-      console.log('Login attempted for:', email);
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+
+      try {
+        const res  = await fetch('login.php', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem("userID", data.userID);
+          if (data.admin == 1) {
+            window.location.href = 'admin-dashboard.php';
+          } else {
+            window.location.href = 'index.php';
+          }
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        alert('Something went wrong. Please try again.');
+        console.error(err);
+      }
     }
   </script>
 </body>

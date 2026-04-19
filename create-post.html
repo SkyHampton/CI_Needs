@@ -876,7 +876,7 @@
       document.getElementById('photoDropZone').style.background = 'var(--off-white)';
     }
     let selectedType = 'need';
-    const CURRENT_USER_ID = 1; // TODO: get user ID from database
+    const CURRENT_USER_ID = sessionStorage.getItem("userID");
 
     /* ── Post type toggle ── */
     function selectType(type) {
@@ -956,7 +956,7 @@
       formData.append('contact', email);
       formData.append('userID', CURRENT_USER_ID);
 
-      const fileInput = document.getElementById('postImage');
+      const fileInput = document.getElementById('postPhoto');
       if (fileInput && fileInput.files.length > 0) {
         formData.append('image', fileInput.files[0]);
       }
