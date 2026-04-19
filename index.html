@@ -1017,7 +1017,7 @@
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <a class="logo" href="index.html">
+      <a class="logo" href="index.php">
         <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:46px; width:auto;" />
         <div class="logo-text">
           <span>California State University</span>
@@ -1025,7 +1025,7 @@
         </div>
       </a>
       <nav>
-        <a href="index.html">Home</a>
+        <a href="index.php">Home</a>
         <a href="dashboard.html">Dashboard</a>
         <a href="resources.html">Resources</a>
         <a href="about.html">About</a>
@@ -1797,7 +1797,7 @@
     function ciLogout() {
       sessionStorage.removeItem('ci_user');
       localStorage.removeItem('ci_profile');
-      window.location.href = 'index.html';
+      window.location.href = 'index.php';
     }
     function ciSyncNav() {
       const user = ciGetUser();
