@@ -1113,24 +1113,26 @@
             $isFulfulled = (bool)$post_row['fulfilled'];
             if (!$isFulfulled){
               $post_html = "<div class=\"need-card\">
-            <div class=\"need-card-top\">
-              <div>
-                <h3>{$post_row['postTitle']}</h3>
+              <div class=\"need-card-top\">
+                <div>
+                  <h3>{$post_row['postTitle']}</h3>
+                </div>
+                <div style=\"display:flex; gap:6px; align-items:center; flex-shrink:0;\">
+                <span class=\"tag tag-$category\">$category</span>
+                </div>
               </div>
-              <span class=\"tag tag-$category\">$category</span>
-            </div>
-            {$image_html}
-            <p>{$post_row['postData']}</p>
-            <div class=\"need-card-meta\">
-              <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
-              <button class=\"respond-btn\">Respond</button>
-              <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
-            </div>
+              {$image_html}
+              <p>{$post_row['postData']}</p>
+              <div class=\"need-card-meta\">
+                <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
+                <button class=\"respond-btn\">Respond</button>
+                <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
+              </div>
 
-            <!-- Comments Section -->
-            <div class=\"comments-section\">
-              <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
-              <div class=\"comments-list\">";
+              <!-- Comments Section -->
+              <div class=\"comments-section\">
+                <button class=\"comments-toggle\" onclick=\"toggleComments(this)\">💬 {$reply_count->fetch()['count']} comments — show</button>
+                <div class=\"comments-list\">";
             } else {
               $post_html = "<div class=\"need-card fulfilled\">
               <div class=\"need-card-top\">
