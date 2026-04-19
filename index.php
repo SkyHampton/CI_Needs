@@ -1117,23 +1117,17 @@
                 <div>
                   <h3>{$post_row['postTitle']}</h3>
                 </div>
+                <div style=\"display:flex; gap:6px; align-items:center; flex-shrink:0;\">
                 <span class=\"tag tag-$category\">$category</span>
+                </div>
               </div>
               {$image_html}
               <p>{$post_row['postData']}</p>
               <div class=\"need-card-meta\">
-                <span>Posted on {$post_row['postDate']} · {$post_row['username']}</span>
+                <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
+                <button class=\"respond-btn\">Respond</button>
                 <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
               </div>
-              <span class=\"tag tag-$category\">$category</span>
-            </div>
-            {$image_html}
-            <p>{$post_row['postData']}</p>
-            <div class=\"need-card-meta\">
-              <span>Posted on {$post_row['postDate']} · {$post_row['username']}({$post_row['email']})</span>
-              <button class=\"respond-btn\">Respond</button>
-              <button class=\"flag-btn\" onclick=\"openFlagModal(this)\" title=\"Flag this post\">🚩 Flag</button>
-            </div>
 
               <!-- Comments Section -->
               <div class=\"comments-section\">
@@ -1180,14 +1174,14 @@
               }
 
               echo "</div><div class=\"comment-input-row\">
-                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']})\" />
+                <input type=\"text\" placeholder=\"Add a comment…\" onkeydown=\"if(event.key==='Enter') submitComment(this, {$post_row['postID']}, {$userID})\" />
                 <button class=\"comment-submit\" onclick=\"submitComment(this.previousElementSibling, {$post_row['postID']}, {$userID})\">➤</button>
               </form></div>
               <div class=\"guidelines-note\">
                 Be respectful and helpful. <a href=\"community-guidelines.html\">Community Guidelines</a>
               </div>
             </div>
-              </div>";
+              </div>";;
           }
           #catch error
         } catch (PDOException $e) {
