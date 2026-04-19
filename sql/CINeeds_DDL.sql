@@ -1,5 +1,6 @@
 USE cineedsc_db;
 
+DROP TABLE IF EXISTS CIN_Graveyard;
 DROP TABLE IF EXISTS CIN_Flag;
 DROP TABLE IF EXISTS CIN_Reply;
 DROP TABLE IF EXISTS CIN_Post;
@@ -18,7 +19,7 @@ PRIMARY KEY (userID));
 CREATE TABLE CIN_Post (
 postID INT AUTO_INCREMENT,
 userID INT,
-postType VARCHAR(8), -- either REQUEST or OFFER
+postType VARCHAR(8), -- either 'need' or 'offering'
 category VARCHAR(16), -- can be the following values: food, housing, financial, health, academic, other
 postTitle VARCHAR(32),
 postData TINYTEXT,
