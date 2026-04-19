@@ -260,17 +260,17 @@
           try {
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
-              foreach($db->query("SELECT * FROM $flag_table INNER JOIN $post_table ON $flag_table.postID = $post_table.postID INNER JOIN $user_table ON $post_table.userID = $user_table.userID") as $flag_row){
-                $reply_count = $db->query("SELECT COUNT(flagID) AS count FROM $flag_table WHERE postID = {$flag_row['postID']}");
+              foreach($db->query("SELECT * FROM $flag_table INNER JOIN $post_table ON $flag_table.postID = $post_table.postID") as $flag_row){
+                $flag_count = $db->query("SELECT COUNT(flagID) AS count FROM $flag_table WHERE postID = {$flag_row['postID']}");
 
                 $post_card = 
                   "<div class=\"admin-post\">
                     <div class=\"admin-post-top\">
                       <div class=\"admin-post-title\">
-                        <span class=\"tag tag-{$flag_row['postType']}\">{$user_row['postType']}</span>&nbsp;
-                        {$user_row['postTitle']}
+                        <span class=\"tag tag-{$flag_row['postType']}\">{$flag_row['postType']}</span>&nbsp;
+                        {$flag_row['postTitle']}
                       </div>
-                      <span class=\"flag-count\"> $reply_count flags</span>
+                      <span class=\"flag-count\"> $flag_count flags</span>
                     </div>
                     <div class=\"admin-post-meta\">
                       <span> {$flag_row['category']}</span>
@@ -403,15 +403,15 @@
           try {
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
-              foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID") as $flag_row){
+              foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID") as $post_row){
 
                 $post_card = 
                   "<div class=\"admin-post\">
                     <div class=\"admin-post-top\">
-                      <div class=\"admin-post-title\"><span class=\"tag tag-{$user_row['postType']}\">{$user_row['postType']}</span>&nbsp; {$user_row['postTitle']}</div>
+                      <div class=\"admin-post-title\"><span class=\"tag tag-{$post_row['postType']}\">{$post_row['postType']}</span>&nbsp; {$post_row['postTitle']}</div>
                     </div>
-                    <div class=\"admin-post-meta\"><span>{$user_row['category']}</span><span> {$user_row['username']}({$user_row['email']})</span><span>Posted on {$user_row['postDate']}</span></div>
-                    <div class=\"admin-post-body\">{$user_row['postData']}</div>
+                    <div class=\"admin-post-meta\"><span>{$post_row['category']}</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
+                    <div class=\"admin-post-body\">{$post_row['postData']}</div>
                     <div class=\"admin-actions\">
                       <button class=\"btn-a btn-fulfill\"  onclick=\"adminAction('Post marked as fulfilled.', this)\"> Fulfilled</button>
                       <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
@@ -734,6 +734,10 @@
       t.style.transform = 'translateX(-50%) translateY(0)';
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 2800);
+    }
+
+    function fulfilPost(postID) {
+
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
