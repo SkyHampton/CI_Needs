@@ -205,14 +205,14 @@
         <button class="admin-nav-item" onclick="showPanel('all', this)">
           <span class="nav-icon"></span> All Posts
         </button>
-        <button class="admin-nav-item" onclick="showPanel('holds', this)">
+        <!-- <button class="admin-nav-item" onclick="showPanel('holds', this)">
           <span class="nav-icon"></span> On Hold
           <span class="nav-badge nav-badge-warn">1</span>
         </button>
         <button class="admin-nav-item" onclick="showPanel('expiring', this)">
           <span class="nav-icon"></span> Expiring Soon
           <span class="nav-badge nav-badge-warn">2</span>
-        </button>
+        </button> -->
         <button class="admin-nav-item" onclick="showPanel('graveyard', this)">
           <span class="nav-icon"></span> Post Graveyard
         </button>
@@ -246,40 +246,59 @@
 
         <div class="admin-card">
 
-          <div class="admin-post">
-            <div class="admin-post-top">
-              <div class="admin-post-title">
-                <span class="tag tag-need">Need</span>&nbsp;
-                Looking for anyone to help pay rent this month
-              </div>
-              <span class="flag-count"> 2 flags</span>
-            </div>
-            <div class="admin-post-meta">
-              <span> Financial</span>
-              <span> anonymous_user</span>
-              <span> Posted 1 day ago</span>
-            </div>
-            <div class="flag-reason">
-              <div class="flag-label">Flag reason: Possible scam / suspicious</div>
-              <div class="flag-comment">"This post is asking for money directly, not a basic need item. Feels like it could be a scam."</div>
-            </div>
-            <div class="admin-post-body">I'm really struggling this month and my landlord is threatening eviction. If anyone can help with even $50 toward rent I would be so grateful. Venmo @username.</div>
-            <div class="admin-actions">
-              <button class="btn-a btn-approve"  onclick="adminAction('Post approved and restored to feed.', this)"> Approve</button>
-              <button class="btn-a btn-hold"     onclick="adminAction('Post placed on hold.', this)"> Hold</button>
-              <button class="btn-a btn-delete"   onclick="confirmDelete(this)"> Remove</button>
-              <button class="btn-a btn-message"  onclick="toggleMessage(this)"> Message Poster</button>
-            </div>
-            <div class="message-compose">
-              <textarea placeholder="Write a message to the poster about this post…"></textarea>
-              <div class="message-compose-actions">
-                <button class="btn-a btn-message" onclick="adminAction('Message sent to poster.', this)">Send Message</button>
-                <button class="btn-a btn-expire" onclick="this.closest('.message-compose').style.display='none'">Cancel</button>
-              </div>
-            </div>
-          </div>
+          <?php
+          #sql server login info
+          $host = "137.184.46.194";
+          $user = "cineedsc_sky";
+          $password = "N3ph@ndus";
+          $database = "cineedsc_db";
+          #sql table and foreign key info
+          $flag_table = "CIN_Flag";
+          $post_table = "CIN_Post";
+          $user_table = "CIN_User";
+          $reply_table = "CIN_Reply";
+          try {
+              #connect to database
+              $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+              foreach($db->query("SELECT * FROM $flag_table INNER JOIN $post_table ON $flag_table.postID = $post_table.postID") as $flag_row){
+                $flag_count = $db->query("SELECT COUNT(flagID) AS count FROM $flag_table WHERE postID = {$flag_row['postID']}");
 
-          <div class="admin-post">
+                $post_card = 
+                  "<div class=\"admin-post\">
+                    <div class=\"admin-post-top\">
+                      <div class=\"admin-post-title\">
+                        <span class=\"tag tag-{$flag_row['postType']}\">{$flag_row['postType']}</span>&nbsp;
+                        {$flag_row['postTitle']}
+                      </div>
+                      <span class=\"flag-count\"> $flag_count flags</span>
+                    </div>
+                    <div class=\"admin-post-meta\">
+                      <span> {$flag_row['category']}</span>
+                      <span> {$flag_row['postType']}</span>
+                      <span> Posted on {$flag_row['postDate']}</span>
+                    </div>
+                    <div class=\"flag-reason\">
+                      <div class=\"flag-label\">Flag reason: {$flag_row['flagReason']}</div>
+                      <div class=\"flag-comment\">\"{$flag_row['flagComment']}\"</div>
+                    </div>
+                    <div class=\"admin-post-body\">{$flag_row['postData']}</div>
+                    <div class=\"admin-actions\">
+                      <button class=\"btn-a btn-approve\"  onclick=\"adminAction('Post approved and restored to feed.', this)\"> Delete Flag</button>
+                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\">Delete Post</button>
+                    </div>
+                  </div>";
+
+                  echo $post_card;
+              }
+
+            #catch error
+              } catch (PDOException $e) {
+                  print "Error!: " . $e->getMessage(). "<br/>";
+                  die();
+              }
+          ?>
+          
+          <!-- <div class="admin-post">
             <div class="admin-post-top">
               <div class="admin-post-title">
                 <span class="tag tag-have">Offering</span>&nbsp;
@@ -342,8 +361,7 @@
                 <button class="btn-a btn-expire" onclick="this.closest('.message-compose').style.display='none'">Cancel</button>
               </div>
             </div>
-          </div>
-
+          </div> -->
         </div>
       </div>
 
@@ -370,10 +388,46 @@
         </div>
         <p class="panel-desc">
           Full post feed — all active, held, and fulfilled posts.
-          <!-- TODO: connect to GET /api/admin/posts -->
         </p>
         <div class="admin-card">
-          <div class="admin-post">
+          <?php
+          #sql server login info
+          $host = "137.184.46.194";
+          $user = "cineedsc_sky";
+          $password = "N3ph@ndus";
+          $database = "cineedsc_db";
+          #sql table and foreign key info
+          $post_table = "CIN_Post";
+          $user_table = "CIN_User";
+          $reply_table = "CIN_Reply";
+          try {
+              #connect to database
+              $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+              foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID") as $post_row){
+
+                $post_card = 
+                  "<div class=\"admin-post\">
+                    <div class=\"admin-post-top\">
+                      <div class=\"admin-post-title\"><span class=\"tag tag-{$post_row['postType']}\">{$post_row['postType']}</span>&nbsp; {$post_row['postTitle']}</div>
+                    </div>
+                    <div class=\"admin-post-meta\"><span>{$post_row['category']}</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
+                    <div class=\"admin-post-body\">{$post_row['postData']}</div>
+                    <div class=\"admin-actions\">
+                      <button class=\"btn-a btn-fulfill\"  onclick=\"adminAction('Post marked as fulfilled.', this)\"> Fulfilled</button>
+                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
+                    </div>
+                  </div>";
+
+                echo $post_card;
+              }
+
+            #catch error
+          } catch (PDOException $e) {
+              print "Error!: " . $e->getMessage(). "<br/>";
+              die();
+          }
+          ?>
+          <!-- <div class="admin-post">
             <div class="admin-post-top">
               <div class="admin-post-title"><span class="tag tag-need">Need</span>&nbsp; Need groceries for the week</div>
             </div>
@@ -414,7 +468,7 @@
                 <button class="btn-a btn-expire"  onclick="this.closest('.message-compose').style.display='none'">Cancel</button>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -499,42 +553,47 @@
       <div class="admin-panel" id="panelGraveyard">
         <h2 class="panel-title" style="margin-bottom:16px;"> Post Graveyard</h2>
         <p class="panel-desc">All removed and expired posts. Posts here are no longer visible to users. They can be restored if removed in error.
-          <!-- TODO: connect to GET /api/admin/posts?status=removed,expired -->
         </p>
         <div class="admin-card">
-          <div class="graveyard-post">
-            <div class="admin-post-top" style="margin-bottom:4px;">
-              <div class="graveyard-post-title"><span class="tag tag-removed">Removed</span>&nbsp; $500 Venmo request for emergency</div>
-              <button class="btn-a btn-restore" onclick="adminAction('Post restored to feed.', this)" style="font-size:0.75rem; padding:4px 10px;">↺ Restore</button>
-            </div>
-            <div class="graveyard-meta">Financial · anonymous_poster · Removed 3 days ago</div>
-            <div class="graveyard-reason">Reason: Violated guidelines — direct money solicitation / possible scam</div>
-          </div>
-          <div class="graveyard-post">
-            <div class="admin-post-top" style="margin-bottom:4px;">
-              <div class="graveyard-post-title"><span class="tag tag-expired">Expired</span>&nbsp; Need BIOL 101 lab notebook</div>
-              <button class="btn-a btn-restore" onclick="adminAction('Post restored to feed.', this)" style="font-size:0.75rem; padding:4px 10px;">↺ Restore</button>
-            </div>
-            <div class="graveyard-meta">Academic · student_k · Expired 1 week ago</div>
-            <div class="graveyard-reason">Reason: No poster response after 4-week expiration reminder</div>
-          </div>
-          <div class="graveyard-post">
-            <div class="admin-post-top" style="margin-bottom:4px;">
-              <div class="graveyard-post-title"><span class="tag tag-fulfilled">Fulfilled</span>&nbsp; Looking for winter jacket, size M</div>
-              <button class="btn-a btn-restore" onclick="adminAction('Post restored to feed.', this)" style="font-size:0.75rem; padding:4px 10px;">↺ Restore</button>
-            </div>
-            <div class="graveyard-meta">Clothing · student_j · Fulfilled 2 weeks ago</div>
-            <div class="graveyard-reason">Reason: Marked fulfilled by poster</div>
-          </div>
+          <?php
+          #sql server login info
+          $host = "137.184.46.194";
+          $user = "cineedsc_sky";
+          $password = "N3ph@ndus";
+          $database = "cineedsc_db";
+          #sql table and foreign key info
+          $graveyard_table = "CIN_Graveyard";
+          try {
+              #connect to database
+              $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+              foreach($db->query("SELECT * FROM $graveyard_table") as $graveyard_row){
+                #TODO: make restoring a post functional
+                $graveyard_post_card = 
+                  "<div class=\"graveyard-post\">
+                    <div class=\"admin-post-top\" style=\"margin-bottom:4px;\">
+                      <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>\
+                      <button class=\"btn-a btn-restore\" onclick=\"adminAction('Post restored to feed.', this)\" style=\"font-size:0.75rem; padding:4px 10px;\">↺ Restore</button>
+                    </div>
+                    <div class=\"graveyard-meta\">{$graveyard_row['category']} · {$graveyard_row['username']}({$graveyard_row['email']}) · Removed 3 days ago</div>
+                    <div class=\"graveyard-reason\">Reason: {$graveyard_row['reason']}</div>
+                  </div>";
+
+                echo $graveyard_post_card;
+              }
+
+            #catch error
+          } catch (PDOException $e) {
+              print "Error!: " . $e->getMessage(). "<br/>";
+              die();
+          }
+          ?>
         </div>
       </div>
 
       <!-- ── USERS ── -->
       <div class="admin-panel" id="panelUsers">
         <h2 class="panel-title" style="margin-bottom:16px;"> User Management</h2>
-        <p class="panel-desc">View and manage user accounts.
-          <!-- TODO: connect to GET /api/admin/users -->
-        </p>
+        <p class="panel-desc">View and manage user accounts.</p>
         <div class="admin-card">
         <?php
         #sql server login info
@@ -675,6 +734,10 @@
       t.style.transform = 'translateX(-50%) translateY(0)';
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 2800);
+    }
+
+    function fulfilPost(postID) {
+
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
