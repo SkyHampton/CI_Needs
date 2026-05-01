@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS CIN_User;
 -- Table containing user login info
 CREATE TABLE CIN_User (
 userID INT AUTO_INCREMENT,
-email VARCHAR(32),
+email VARCHAR(64), -- max 64 characters increase from 32 characters to support longer email addresses
 username VARCHAR(32),
 password VARCHAR(32),
 banned BOOLEAN DEFAULT FALSE,
