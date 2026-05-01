@@ -1002,24 +1002,12 @@
 
   <script>
     // ── Require login ──
-    function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('ci_user')); } catch (e) { return null; } }
-    function ciLogout() { sessionStorage.removeItem('ci_user'); window.location.href = 'index.php'; }
+    function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+    function ciLogout() { sessionStorage.removeItem('userID'); window.location.href = 'login.html'; }
 
     const user = ciGetUser();
     if (!user) {
-      sessionStorage.setItem('ci_redirect', 'dashboard.html');
-      window.location.href = 'login_demo.html';
-    }
-
-    // ── Populate user info ──
-    if (user) {
-      const initials = ((user.firstName || '?')[0] + (user.lastName ? user.lastName[0] : '')).toUpperCase();
-      document.getElementById('dashGreeting').textContent = 'Welcome back, ' + (user.firstName || 'Dolphin') + '!';
-      document.getElementById('sidebarAvatar').textContent = initials || (user.firstName || '?')[0].toUpperCase();
-      document.getElementById('sidebarName').textContent = user.fullName || user.firstName;
-      document.getElementById('sidebarEmail').textContent = user.email || '';
-      document.getElementById('accountEmail').textContent = user.email || '';
-      document.getElementById('statMyPosts').textContent = 2; // placeholder
+      window.location.href = 'login.html';
     }
 
     // ── Panel switching ──
