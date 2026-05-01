@@ -341,7 +341,7 @@ try {
       <div class="needs-grid">
         <?php if (empty($posts)): ?>
           <div class="empty-state">
-            <span class="icon">🔍</span>
+            <span class="icon"></span>
             <p>No posts found<?= $activeCategory !== 'all' ? ' in the <strong>' . ucfirst($activeCategory) . '</strong> category' : '' ?>.<br>
                <a href="create-post.html" style="color:var(--blue); font-weight:600;">Be the first to post!</a></p>
           </div>
@@ -381,7 +381,7 @@ try {
                 <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
                   <span class="tag tag-<?= $category ?>"><?= $uc_category ?></span>
                   <?php if ($isFulfilled): ?>
-                    <span class="fulfilled-ribbon">✓ Fulfilled</span>
+                    <span class="fulfilled-ribbon"> Fulfilled</span>
                   <?php endif; ?>
                 </div>
               </div>
@@ -393,13 +393,13 @@ try {
               <div class="need-card-meta">
                 <span>Posted on <?= $safe_date ?> · <?= $safe_user ?> (<?= $safe_email ?>)</span>
                 <button class="respond-btn">Respond</button>
-                <button class="flag-btn" onclick="openFlagModal(this)" title="Flag this post">🚩 Flag</button>
+                <button class="flag-btn" onclick="openFlagModal(this)" title="Flag this post"> Flag</button>
               </div>
 
               <!-- Comments Section -->
               <div class="comments-section">
                 <button class="comments-toggle" onclick="toggleComments(this)">
-                  💬 <?= $reply_count ?> comment<?= $reply_count != 1 ? 's' : '' ?> — show
+                  <?= $reply_count ?> comment<?= $reply_count != 1 ? 's' : '' ?> — show
                 </button>
                 <div class="comments-list">
                   <?php
@@ -431,7 +431,7 @@ try {
                   <input type="text" placeholder="Add a comment…"
                     onkeydown="if(event.key==='Enter') submitComment(this, <?= $post_id ?>)" />
                   <button class="comment-submit"
-                    onclick="submitComment(this.previousElementSibling, <?= $post_id ?>)">➤</button>
+                    onclick="submitComment(this.previousElementSibling, <?= $post_id ?>)"></button>
                 </div>
                 <div class="guidelines-note">
                   Be respectful and helpful. <a href="community-guidelines.html">Community Guidelines</a>
@@ -572,7 +572,7 @@ try {
   <!-- FLAG MODAL -->
   <div class="modal-overlay" id="flagModal" onclick="if(event.target===this) closeFlagModal()">
     <div class="modal">
-      <h3>🚩 Flag This Post</h3>
+      <h3> Flag This Post</h3>
       <p>Help keep CI Needs safe. Flagged posts are reviewed by our team. Please only flag posts that genuinely violate our guidelines.</p>
       <label for="flagReason">Reason for flagging <span style="color:var(--crimson)">*</span></label>
       <select id="flagReason">
@@ -715,11 +715,11 @@ try {
       // TODO: POST to flag endpoint
       closeFlagModal();
       if (currentFlagBtn) {
-        currentFlagBtn.textContent = '🚩 Flagged';
+        currentFlagBtn.textContent = ' Flagged';
         currentFlagBtn.classList.add('flagged');
         currentFlagBtn.disabled = true;
       }
-      showToast('🚩 Post reported. Thank you — our team will review it.');
+      showToast(' Post reported. Thank you — our team will review it.');
     }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlagModal(); });
 
@@ -728,7 +728,7 @@ try {
       const list = btn.nextElementSibling;
       const open = list.classList.toggle('open');
       const count = list.querySelectorAll('.comment-item').length;
-      btn.textContent = '💬 ' + count + ' comment' + (count !== 1 ? 's' : '') + ' — ' + (open ? 'hide' : 'show');
+      btn.textContent = ' ' + count + ' comment' + (count !== 1 ? 's' : '') + ' — ' + (open ? 'hide' : 'show');
     }
 
     function submitComment(input, postID) {
