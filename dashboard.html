@@ -1002,11 +1002,12 @@
 
   <script>
     // ── Require login ──
-    function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('ci_user')); } catch (e) { return null; } }
-    function ciLogout() { sessionStorage.removeItem('ci_user'); window.location.href = 'index.php'; }
+    function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+    function ciLogout() { sessionStorage.removeItem('userID'); window.location.href = 'login.html'; }
 
     const user = ciGetUser();
     if (!user) {
+<<<<<<< HEAD
       sessionStorage.setItem('ci_redirect', 'dashboard.html');
       window.location.href = 'login.html';
     }
@@ -1020,6 +1021,9 @@
       document.getElementById('sidebarEmail').textContent = user.email || '';
       document.getElementById('accountEmail').textContent = user.email || '';
       document.getElementById('statMyPosts').textContent = 2; // placeholder
+=======
+      window.location.href = 'login.html';
+>>>>>>> fabc0a9793e7d7df650a778c2aa789d8a7b8b6b9
     }
 
     // ── Panel switching ──
