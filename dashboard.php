@@ -825,9 +825,7 @@ try {
           <span class="nav-icon"></span> My Posts
         </button>
         <button class="dash-nav-item" onclick="showPanel('messages')">
-          <span class="nav-icon"></span> Messages
-          <span id="msgBadge"
-            style="margin-left:auto; background:var(--blue); color:white; font-size:0.7rem; font-weight:700; padding:1px 7px; border-radius:999px;">2</span>
+          <span class="nav-icon"></span> Comments
         </button>
         <button class="dash-nav-item" onclick="showPanel('preferences')">
           <span class="nav-icon"></span> Notifications
@@ -917,25 +915,41 @@ try {
         </div>
       </div>
 
-      <!-- MESSAGES PANEL -->
+      <!-- COMMENTS PANEL -->
       <div class="dash-panel" id="panelMessages">
         <div class="card">
           <div class="panel-header">
-            <h2 class="section-title">Messages</h2>
+            <h2 class="section-title">Comments</h2>
           </div>
           <p style="font-size:0.82rem; color:var(--mid-gray); margin-bottom:16px;">
             Responses from other students about your posts.
-            <!-- TODO: connect to GET /api/messages?user=me -->
           </p>
-          <div class="message-row msg-unread">
-            <div class="msg-avatar">JT</div>
-            <div class="msg-body">
-              <div class="msg-sender">Jordan T.</div>
-              <div class="msg-preview">Hey, I have that textbook! Can we meet near the library Thursday afternoon?</div>
-            </div>
-            <div class="msg-time">2 hrs ago</div>
-          </div>
-          <div class="message-row msg-unread">
+            <?php 
+            try {
+                $stmt = $db->prepare("SELECT *, CIN_Reply.userID AS reply_userID FROM CIN_Reply JOIN CIN_Post ON CIN_Reply.postID = CIN_Post.postID WHERE CIN_Post.userID = ?");
+                $stmt->execute([$_SESSION['userID']]);
+                $results = $stmt->fetchAll();
+
+                
+                foreach ($results as $replyRow) {
+                  $stmt = $db->prepare("SELECT * FROM CIN_User WHERE userID = ?");
+                  $stmt->execute([$replyRow['reply_userID']]);
+                  $reply_user = $stmt->fetch();
+                    echo "<div class=\"message-row msg-unread\">
+                            <div class=\"msg-avatar\">{$reply_user['username'][0]}</div>
+                            <div class=\"msg-body\">
+                              <div class=\"msg-sender\">{$reply_user['username']}</div>
+                              <div class=\"msg-preview\">{$replyRow['replyData']}</div>
+                            </div>
+                            <div class=\"msg-time\">{$replyRow['replyDate']}</div>
+                          </div>";
+                }
+            } catch (PDOException $e) {
+                print "Error!: " . $e->getMessage(). "<br/>";
+                die();
+            } ?>
+          
+          <!-- <div class="message-row msg-unread">
             <div class="msg-avatar">MC</div>
             <div class="msg-body">
               <div class="msg-sender">Maria C.</div>
@@ -955,7 +969,7 @@ try {
           <div
             style="margin-top:16px; padding-top:16px; border-top:1px solid var(--light-gray); font-size:0.82rem; color:var(--mid-gray);">
             Full messaging with reply functionality coming in a future sprint.
-          </div>
+          </div> -->
         </div>
       </div>
 
