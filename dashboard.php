@@ -4,15 +4,30 @@ $host      = "137.184.46.194";
 $user      = "cineedsc_sky";
 $password  = "N3ph@ndus";
 $database  = "cineedsc_db";
-$post_table  = "CIN_Post";
-$user_table  = "CIN_User";
-$reply_table = "CIN_Reply";
 
 try {
+    // connect to database
     $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+    // get info on user for profile portrait, username, and email
     $stmt = $db->prepare('SELECT * FROM CIN_User WHERE userID = ?');
     $stmt->execute([$_SESSION['userID']]);
     $user_data = $stmt->fetch();
+
+    // get statistics
+    // get post count
+    $stmt = $db->prepare('SELECT COUNT(postID) AS count FROM CIN_Post WHERE userID = ?');
+    $stmt->execute([$_SESSION['userID']]);
+    $post_count = $stmt->fetch();
+
+    // get fulfilled post count
+    $stmt = $db->prepare('SELECT COUNT(postID) AS count FROM CIN_Post WHERE userID = ? AND fulfilled = TRUE');
+    $stmt->execute([$_SESSION['userID']]);
+    $fulfilled_post_count = $stmt->fetch();
+
+    //get count of comments on users posts
+    $stmt = $db->prepare('SELECT COUNT(replyID) AS count FROM CIN_Reply INNER JOIN CIN_Post ON CIN_Reply.postID = CIN_Post.postID WHERE CIN_Post.userID = ?');
+    $stmt->execute([$_SESSION['userID']]);
+    $comment_count = $stmt->fetch();
 }catch (PDOException $e) {
     print "Error!: " . $e->getMessage(). "<br/>";
     die();
@@ -831,9 +846,9 @@ try {
 
       <!-- Stats row -->
       <div class="stats-row">
-        <div class="stat-card"><span class="num" id="statMyPosts">0</span><span class="lbl">My Posts</span></div>
-        <div class="stat-card"><span class="num">2</span><span class="lbl">New Messages</span></div>
-        <div class="stat-card"><span class="num" id="statFulfilled">0</span><span class="lbl">Needs Fulfilled</span>
+        <div class="stat-card"><span class="num" id="statMyPosts"><?php echo "{$post_count['count']}"?></span><span class="lbl">My Posts</span></div>
+        <div class="stat-card"><span class="num"><?php echo "{$comment_count['count']}"?></span><span class="lbl">Total Comments</span></div>
+        <div class="stat-card"><span class="num" id="statFulfilled"><?php echo "{$fulfilled_post_count['count']}"?></span><span class="lbl">Needs Fulfilled</span>
         </div>
       </div>
 
