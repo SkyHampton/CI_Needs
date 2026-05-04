@@ -860,8 +860,32 @@ try {
             <a href="create-post.html" class="btn-primary" style="font-size:0.85rem; padding:7px 16px;">+ New Post</a>
           </div>
           <div id="myPostsList">
-            <!-- Placeholder posts — replace with API call to GET /api/posts?user=me -->
-            <div class="post-row">
+            <?php 
+            try {
+                $stmt = $db->prepare("SELECT * FROM CIN_Post WHERE userID = ?");
+                $stmt->execute([$_SESSION['userID']]);
+                $results = $stmt->fetchAll();
+                foreach ($results as $postRow) {
+                    echo "<div class=\"post-row\">
+                            <div class=\"post-row-info\">
+                                <div class=\"post-row-title\">
+                                <span class=\"tag tag-need\">{$postRow['postType']}</span>
+                                {$postRow['postTitle']}
+                                </div>
+                                <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
+                            </div>
+                            <div class=\"post-row-actions\">
+                                <button class=\"btn-sm btn-fulfill\" onclick=\"showToast(' Marked as fulfilled!')\">Fulfilled</button>
+                                <button class=\"btn-sm btn-edit\" onclick=\"showToast(' Edit — connect to backend')\">Edit</button>
+                                <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
+                            </div>
+                            </div>";
+                }
+            } catch (PDOException $e) {
+                print "Error!: " . $e->getMessage(). "<br/>";
+                die();
+            } ?>
+            <!-- <div class="post-row">
               <div class="post-row-info">
                 <div class="post-row-title">
                   <span class="tag tag-need">Need</span>
@@ -888,7 +912,7 @@ try {
                 <button class="btn-sm btn-edit" onclick="showToast(' Edit — connect to backend')">Edit</button>
                 <button class="btn-sm btn-delete" onclick="showToast(' Delete — connect to backend')">Delete</button>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
