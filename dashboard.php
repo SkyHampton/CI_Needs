@@ -1,0 +1,1085 @@
+<?php
+session_start();
+$host      = "137.184.46.194";
+$user      = "cineedsc_sky";
+$password  = "N3ph@ndus";
+$database  = "cineedsc_db";
+$post_table  = "CIN_Post";
+$user_table  = "CIN_User";
+$reply_table = "CIN_Reply";
+
+try {
+    $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+    $stmt = $db->prepare('SELECT * FROM CIN_User WHERE userID = ?');
+    $stmt->execute([$_SESSION['userID']]);
+    $user_data = $stmt->fetch();
+}catch (PDOException $e) {
+    print "Error!: " . $e->getMessage(). "<br/>";
+    die();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | CI Needs — CSU Channel Islands</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600;700&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --crimson: #c21228;
+      --crimson-dark: #b41414;
+      --blue: #1F6FAE;
+      --blue-dark: #155887;
+      --sage: #D6E4D6;
+      --sage-dark: #B4CCBA;
+      --white: #FFFFFF;
+      --off-white: #F5F5F5;
+      --light-gray: #E8E8E8;
+      --mid-gray: #767676;
+      --dark: #1A1A1A;
+      --text: #333333;
+      --green: #2a7a4b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Source Sans 3', sans-serif;
+      color: var(--text);
+      background: var(--off-white);
+    }
+
+    /* ── TOP BAR ── */
+    .top-bar {
+      background: var(--crimson);
+      color: white;
+      font-size: 0.78rem;
+      padding: 5px 0;
+    }
+
+    .top-bar .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 18px;
+    }
+
+    .top-bar a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .top-bar a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--light-gray);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text span:first-child {
+      font-size: 0.72rem;
+      color: var(--mid-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .logo-text span:last-child {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--crimson);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    nav a:hover {
+      background: var(--off-white);
+      color: var(--crimson);
+    }
+
+    nav a.active {
+      color: var(--crimson);
+      border-bottom: 2px solid var(--crimson);
+    }
+
+    .btn-nav {
+      background: var(--blue);
+      color: white !important;
+      border-radius: 4px;
+      padding: 7px 16px !important;
+      transition: background 0.2s !important;
+    }
+
+    .btn-nav:hover {
+      background: var(--blue-dark) !important;
+    }
+
+    .nav-user {
+      font-size: 0.88rem;
+      color: var(--mid-gray);
+      font-weight: 600;
+      padding: 6px 8px;
+    }
+
+    .nav-logout {
+      color: var(--crimson) !important;
+      font-size: 0.88rem !important;
+    }
+
+    /* ── DASHBOARD HERO ── */
+    .dash-hero {
+      background: linear-gradient(135deg, var(--sage) 0%, #e8f0e8 60%, #f0f5f0 100%);
+      border-bottom: 1px solid var(--sage-dark);
+      padding: 32px 24px 28px;
+    }
+
+    .dash-hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .dash-greeting h1 {
+      font-family: 'Merriweather', serif;
+      font-size: 1.7rem;
+      color: var(--crimson);
+      margin-bottom: 4px;
+    }
+
+    .dash-greeting p {
+      font-size: 0.95rem;
+      color: #4a4a4a;
+    }
+
+    .dash-hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+    }
+
+    .btn-outline {
+      background: white;
+      color: var(--crimson);
+      border: 2px solid var(--crimson);
+      padding: 9px 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .btn-outline:hover {
+      background: var(--crimson);
+      color: white;
+    }
+
+    /* ── LAYOUT ── */
+    .dash-layout {
+      max-width: 1100px;
+      margin: 32px auto 80px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR NAV ── */
+    .dash-sidebar {
+      position: sticky;
+      top: 90px;
+    }
+
+    .dash-nav {
+      background: white;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .dash-nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-bottom: 1px solid var(--light-gray);
+      transition: background 0.15s, color 0.15s;
+      cursor: pointer;
+      border: none;
+      background: white;
+      width: 100%;
+      text-align: left;
+      font-family: 'Source Sans 3', sans-serif;
+    }
+
+    .dash-nav-item:last-child {
+      border-bottom: none;
+    }
+
+    .dash-nav-item:hover {
+      background: var(--off-white);
+      color: var(--crimson);
+    }
+
+    .dash-nav-item.active {
+      background: #fdf3f4;
+      color: var(--crimson);
+      border-left: 3px solid var(--crimson);
+    }
+
+    .dash-nav-item .nav-icon {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .profile-preview {
+      background: white;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .profile-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--crimson);
+      color: white;
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+    }
+
+    .profile-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--dark);
+    }
+
+    .profile-email {
+      font-size: 0.78rem;
+      color: var(--mid-gray);
+      margin-top: 2px;
+      word-break: break-all;
+    }
+
+    .profile-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .profile-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ── MAIN PANELS ── */
+    .dash-panel {
+      display: none;
+    }
+
+    .dash-panel.active {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .section-title {
+      font-family: 'Merriweather', serif;
+      font-size: 1.2rem;
+      color: var(--crimson);
+      border-bottom: 2px solid var(--crimson);
+      padding-bottom: 7px;
+    }
+
+    .panel-header .section-title {
+      border: none;
+      padding: 0;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    /* ── MY POSTS ── */
+    .post-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .post-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .post-row:first-child {
+      padding-top: 0;
+    }
+
+    .post-row-info {
+      flex: 1;
+    }
+
+    .post-row-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .post-row-meta {
+      font-size: 0.8rem;
+      color: var(--mid-gray);
+    }
+
+    .post-row-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-sm {
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: 'Source Sans 3', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-edit {
+      background: var(--off-white);
+      color: var(--blue);
+      border: 1.5px solid var(--light-gray);
+    }
+
+    .btn-edit:hover {
+      border-color: var(--blue);
+      background: #eef4fb;
+    }
+
+    .btn-delete {
+      background: var(--off-white);
+      color: var(--crimson);
+      border: 1.5px solid var(--light-gray);
+    }
+
+    .btn-delete:hover {
+      border-color: var(--crimson);
+      background: #fdf3f4;
+    }
+
+    .btn-fulfill {
+      background: var(--off-white);
+      color: var(--green);
+      border: 1.5px solid var(--light-gray);
+    }
+
+    .btn-fulfill:hover {
+      border-color: var(--green);
+      background: #edf7f2;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 4px;
+    }
+
+    .tag-need {
+      background: #fdf3f4;
+      color: var(--crimson);
+    }
+
+    .tag-have {
+      background: #eef4fb;
+      color: var(--blue);
+    }
+
+    .tag-fulfilled {
+      background: #edf7f2;
+      color: var(--green);
+    }
+
+    /* ── MESSAGES ── */
+    .message-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .message-row:last-child {
+      border-bottom: none;
+    }
+
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--sage-dark);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .msg-body {
+      flex: 1;
+    }
+
+    .msg-sender {
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: var(--dark);
+    }
+
+    .msg-preview {
+      font-size: 0.85rem;
+      color: var(--mid-gray);
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    .msg-time {
+      font-size: 0.75rem;
+      color: var(--mid-gray);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+
+    .msg-unread .msg-sender::after {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: var(--blue);
+      border-radius: 50%;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── PREFERENCES ── */
+    .pref-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--light-gray);
+      gap: 16px;
+    }
+
+    .pref-row:last-child {
+      border-bottom: none;
+    }
+
+    .pref-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--dark);
+    }
+
+    .pref-desc {
+      font-size: 0.8rem;
+      color: var(--mid-gray);
+      margin-top: 2px;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      width: 42px;
+      height: 24px;
+      background: var(--light-gray);
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      border: none;
+    }
+
+    .toggle.on {
+      background: var(--blue);
+    }
+
+    .toggle::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle.on::after {
+      left: 21px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--mid-gray);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-family: 'Merriweather', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--crimson);
+      display: block;
+    }
+
+    .stat-card .lbl {
+      font-size: 0.78rem;
+      color: var(--mid-gray);
+      margin-top: 3px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--crimson);
+      color: white;
+      margin-top: 60px;
+      padding: 36px 24px 20px;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      opacity: 0.75;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-bottom a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .dash-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dash-sidebar {
+        position: static;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-bar">
+    <div class="inner">
+      <a href="https://www.csuci.edu/students/" target="_blank">Current Students</a>
+      <a href="https://www.csuci.edu/faculty/" target="_blank">Faculty</a>
+      <a href="https://www.csuci.edu/staff/" target="_blank">Staff</a>
+      <a href="https://www.csuci.edu/alumni/" target="_blank">Alumni</a>
+      <a href="login.html" id="navLoginLink">CI Needs Login</a>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-inner">
+      <a class="logo" href="index.php">
+        <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:46px; width:auto;" />
+        <div class="logo-text">
+          <span>California State University</span>
+          <span>Channel Islands / CI Needs</span>
+        </div>
+      </a>
+      <nav>
+        <a href="index.php">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="resources.html">Resources</a>
+        <a href="about.html">About</a>
+        <a href="create-post.html" class="btn-nav">Create a Post</a>
+        <span id="navUserLabel"
+          style="display:none; font-size:0.88rem; font-weight:600; color:var(--mid-gray); padding: 6px 8px;"></span>
+        <a href="#" id="navLogoutLink"
+          style="display:none; font-size:0.88rem; font-weight:600; color:var(--crimson); padding:6px 10px;"
+          onclick="ciLogout()">Sign Out</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- DASHBOARD HERO -->
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <div class="dash-greeting">
+        <h1 id="dashGreeting">Welcome back!</h1>
+        <p>Here's what's happening with your posts and messages.</p>
+      </div>
+      <div class="dash-hero-actions">
+        <a href="create-post.html" class="btn-primary">+ Create a Post</a>
+        <a href="profile.html" class="btn-outline">My Profile</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD LAYOUT -->
+  <div class="dash-layout">
+
+    <!-- LEFT: Sidebar nav -->
+    <aside class="dash-sidebar">
+
+      <!-- Profile card -->
+      <div class="profile-preview">
+        <div class="profile-avatar" id="sidebarAvatar"><?php echo "{$user_data['username'][0]}"?></div>
+        <div class="profile-name" id="sidebarName"><?php echo "{$user_data['username']}"?></div>
+        <div class="profile-email" id="sidebarEmail"><?php echo "{$user_data['email']}"?></div>
+        <a href="profile.html" class="profile-link">Edit Profile →</a>
+      </div>
+
+      <div style="height:12px;"></div>
+
+      <!-- Nav -->
+      <div class="dash-nav">
+        <button class="dash-nav-item active" onclick="showPanel('posts')">
+          <span class="nav-icon"></span> My Posts
+        </button>
+        <button class="dash-nav-item" onclick="showPanel('messages')">
+          <span class="nav-icon"></span> Messages
+          <span id="msgBadge"
+            style="margin-left:auto; background:var(--blue); color:white; font-size:0.7rem; font-weight:700; padding:1px 7px; border-radius:999px;">2</span>
+        </button>
+        <button class="dash-nav-item" onclick="showPanel('preferences')">
+          <span class="nav-icon"></span> Notifications
+        </button>
+        <button class="dash-nav-item" onclick="showPanel('account')">
+          <span class="nav-icon"></span> Account Settings
+        </button>
+        <button class="dash-nav-item nav-logout" onclick="ciLogout()" style="color:var(--crimson);">
+          <span class="nav-icon"></span> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- RIGHT: Panels -->
+    <main>
+
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-card"><span class="num" id="statMyPosts">0</span><span class="lbl">My Posts</span></div>
+        <div class="stat-card"><span class="num">2</span><span class="lbl">New Messages</span></div>
+        <div class="stat-card"><span class="num" id="statFulfilled">0</span><span class="lbl">Needs Fulfilled</span>
+        </div>
+      </div>
+
+      <!-- MY POSTS PANEL -->
+      <div class="dash-panel active" id="panelPosts">
+        <div class="card">
+          <div class="panel-header">
+            <h2 class="section-title">My Posts</h2>
+            <a href="create-post.html" class="btn-primary" style="font-size:0.85rem; padding:7px 16px;">+ New Post</a>
+          </div>
+          <div id="myPostsList">
+            <!-- Placeholder posts — replace with API call to GET /api/posts?user=me -->
+            <div class="post-row">
+              <div class="post-row-info">
+                <div class="post-row-title">
+                  <span class="tag tag-need">Need</span>
+                  Looking for BIOL 120 textbook
+                </div>
+                <div class="post-row-meta">Academic · Posted 3 days ago</div>
+              </div>
+              <div class="post-row-actions">
+                <button class="btn-sm btn-fulfill" onclick="showToast(' Marked as fulfilled!')">Fulfilled</button>
+                <button class="btn-sm btn-edit" onclick="showToast(' Edit — connect to backend')">Edit</button>
+                <button class="btn-sm btn-delete" onclick="showToast(' Delete — connect to backend')">Delete</button>
+              </div>
+            </div>
+            <div class="post-row">
+              <div class="post-row-info">
+                <div class="post-row-title">
+                  <span class="tag tag-have">Offering</span>
+                  Free clothing — sizes S, M, L
+                </div>
+                <div class="post-row-meta">Clothing · Posted 1 week ago</div>
+              </div>
+              <div class="post-row-actions">
+                <button class="btn-sm btn-fulfill" onclick="showToast(' Marked as fulfilled!')">Fulfilled</button>
+                <button class="btn-sm btn-edit" onclick="showToast(' Edit — connect to backend')">Edit</button>
+                <button class="btn-sm btn-delete" onclick="showToast(' Delete — connect to backend')">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESSAGES PANEL -->
+      <div class="dash-panel" id="panelMessages">
+        <div class="card">
+          <div class="panel-header">
+            <h2 class="section-title">Messages</h2>
+          </div>
+          <p style="font-size:0.82rem; color:var(--mid-gray); margin-bottom:16px;">
+            Responses from other students about your posts.
+            <!-- TODO: connect to GET /api/messages?user=me -->
+          </p>
+          <div class="message-row msg-unread">
+            <div class="msg-avatar">JT</div>
+            <div class="msg-body">
+              <div class="msg-sender">Jordan T.</div>
+              <div class="msg-preview">Hey, I have that textbook! Can we meet near the library Thursday afternoon?</div>
+            </div>
+            <div class="msg-time">2 hrs ago</div>
+          </div>
+          <div class="message-row msg-unread">
+            <div class="msg-avatar">MC</div>
+            <div class="msg-body">
+              <div class="msg-sender">Maria C.</div>
+              <div class="msg-preview">Are the clothes still available? I'm a size M and could really use some of those.
+              </div>
+            </div>
+            <div class="msg-time">Yesterday</div>
+          </div>
+          <div class="message-row">
+            <div class="msg-avatar">AR</div>
+            <div class="msg-body">
+              <div class="msg-sender">Alex R.</div>
+              <div class="msg-preview">Thanks for the post — I picked up the groceries and it really helped. </div>
+            </div>
+            <div class="msg-time">3 days ago</div>
+          </div>
+          <div
+            style="margin-top:16px; padding-top:16px; border-top:1px solid var(--light-gray); font-size:0.82rem; color:var(--mid-gray);">
+            Full messaging with reply functionality coming in a future sprint.
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTIFICATIONS PANEL -->
+      <div class="dash-panel" id="panelPreferences">
+        <div class="card">
+          <h2 class="section-title" style="margin-bottom:20px;">Notification Preferences</h2>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">New messages on my posts</div>
+              <div class="pref-desc">Get notified when someone responds to one of your posts</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Post marked as fulfilled</div>
+              <div class="pref-desc">Get notified when a post you responded to is marked fulfilled</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">New posts in my categories</div>
+              <div class="pref-desc">Get notified when new posts are added in categories you follow</div>
+            </div>
+            <button class="toggle" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Community announcements</div>
+              <div class="pref-desc">Receive updates about CI Needs features and campus resources</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div style="margin-top:20px; font-size:0.82rem; color:var(--mid-gray);">
+            Notification delivery (email/in-app) will be configured once the backend is connected.
+            <!-- TODO: connect to PATCH /api/users/me/preferences -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCOUNT PANEL -->
+      <div class="dash-panel" id="panelAccount">
+        <div class="card">
+          <h2 class="section-title" style="margin-bottom:20px;">Account Settings</h2>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Change Password</div>
+              <div class="pref-desc">Update your CI Needs account password</div>
+            </div>
+            <button class="btn-sm btn-edit" onclick="showToast(' Password change — connect to backend')">Change</button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Email Address</div>
+              <div class="pref-desc" id="accountEmail">Loading…</div>
+            </div>
+            <button class="btn-sm btn-edit" onclick="showToast(' Email update — connect to backend')">Update</button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Profile Visibility</div>
+              <div class="pref-desc">Control whether your name is shown on public posts</div>
+            </div>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="pref-row">
+            <div>
+              <div class="pref-label">Delete Account</div>
+              <div class="pref-desc">Permanently remove your account and all posts</div>
+            </div>
+            <button class="btn-sm btn-delete"
+              onclick="showToast(' Account deletion — connect to backend')">Delete</button>
+          </div>
+          <div style="margin-top: 20px;">
+            <a href="profile.html" class="btn-primary" style="display:inline-block;">Go to Full Profile →</a>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"
+    style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(60px); background:var(--dark); color:white; padding:10px 20px; border-radius:4px; font-size:0.88rem; font-weight:600; transition:transform 0.3s; z-index:9999; pointer-events:none;">
+    Done</div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-bottom">
+        <span>&copy; 2026 California State University Channel Islands &middot; 1 University Dr., Camarillo, CA
+          93012</span>
+        <div class="footer-links">
+          <a href="https://www.csuci.edu/titleix/annual-report/clery/annual-security-report.htm" target="_blank">Annual
+            Security Report</a>
+          <a href="https://www.csuci.edu/titleix/" target="_blank">Title IX</a>
+          <a href="https://www.csuci.edu/legal/" target="_blank">Legal</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Require login ──
+    function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+    function ciLogout() { sessionStorage.removeItem('userID'); window.location.href = 'login.html'; }
+
+    const user = ciGetUser();
+    if (!user) {
+      window.location.href = 'login.html';
+    }
+
+    // ── Panel switching ──
+    function showPanel(id) {
+      document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.dash-nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
+      event.currentTarget.classList.add('active');
+      if (id === 'messages') document.getElementById('msgBadge').style.display = 'none';
+    }
+
+    // ── Toast ──
+    let toastTimer;
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.transform = 'translateX(-50%) translateY(0)';
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 2500);
+    }
+  </script>
+  <script>
+    // ── CI Needs session sync — runs on every page ──
+    function ciGetUser() {
+      try { return JSON.parse(sessionStorage.getItem('ci_user')); } catch (e) { return null; }
+    }
+    function ciLogout() {
+      sessionStorage.removeItem('ci_user');
+      localStorage.removeItem('ci_profile');
+      window.location.href = 'index.php';
+    }
+    function ciSyncNav() {
+      const user = ciGetUser();
+      const loginLink = document.getElementById('navLoginLink');
+      const logoutLink = document.getElementById('navLogoutLink');
+      const userLabel = document.getElementById('navUserLabel');
+      if (user) {
+        if (loginLink) loginLink.style.display = 'none';
+        if (logoutLink) logoutLink.style.display = 'inline';
+        if (userLabel) {
+          userLabel.textContent = 'Hi, ' + (user.firstName || user.email.split('@')[0]);
+          userLabel.style.display = 'inline';
+        }
+      } else {
+        if (loginLink) loginLink.style.display = 'inline';
+        if (logoutLink) logoutLink.style.display = 'none';
+        if (userLabel) userLabel.style.display = 'none';
+      }
+    }
+    ciSyncNav();
+  </script>
+</body>
+
+</html>
