@@ -280,7 +280,7 @@ try {
       </a>
       <nav>
         <a href="index.php" class="active">Home</a>
-        <a href="dashboard.html">Dashboard</a>
+        <a href="dashboard.php">Dashboard</a>
         <a href="resources.html">Resources</a>
         <a href="about.html">About</a>
         <a href="create-post.html" class="btn-nav">Create a Post</a>
