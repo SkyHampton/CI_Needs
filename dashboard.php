@@ -827,12 +827,12 @@ try {
         <button class="dash-nav-item" onclick="showPanel('messages')">
           <span class="nav-icon"></span> Comments
         </button>
-        <button class="dash-nav-item" onclick="showPanel('preferences')">
+        <!-- <button class="dash-nav-item" onclick="showPanel('preferences')">
           <span class="nav-icon"></span> Notifications
         </button>
         <button class="dash-nav-item" onclick="showPanel('account')">
           <span class="nav-icon"></span> Account Settings
-        </button>
+        </button> -->
         <button class="dash-nav-item nav-logout" onclick="ciLogout()" style="color:var(--crimson);">
           <span class="nav-icon"></span> Sign Out
         </button>
