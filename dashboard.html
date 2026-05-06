@@ -1003,7 +1003,12 @@
   <script>
     // ── Require login ──
     function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
-    function ciLogout() { sessionStorage.removeItem('userID'); window.location.href = 'login.html'; }
+    function ciLogout() {
+      sessionStorage.removeItem('ci_user');
+      sessionStorage.removeItem('userID');
+      localStorage.removeItem('ci_profile');
+      window.location.href = 'login.html';
+    }
 
     const user = ciGetUser();
     if (!user) {

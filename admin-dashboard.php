@@ -187,7 +187,8 @@
       <div class="header-right">
         <span class="admin-name" id="adminNameLabel">Admin</span>
         <a href="index.html" class="btn-view-site">View Site</a>
-        <a href="index.html" class="btn-logout" onclick="sessionStorage.removeItem('ci_user')">Sign Out</a>
+        <a href=# class="btn-logout" onclick="ciLogout()">Sign Out</a>
+
       </div>
     </div>
   </header>
@@ -672,6 +673,13 @@
 
   <script>
     // ── Auth check — backend will handle real admin check ──
+
+    function ciLogout() {
+      sessionStorage.removeItem('ci_user');
+      sessionStorage.removeItem('userID');
+      localStorage.removeItem('ci_profile');
+      window.location.href = 'login.html';
+    }
 
    function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
 
