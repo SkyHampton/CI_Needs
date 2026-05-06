@@ -769,7 +769,7 @@ try {
       sessionStorage.removeItem('ci_user');
       sessionStorage.removeItem('userID');
       localStorage.removeItem('ci_profile');
-      window.location.href = 'index.php';
+      window.location.href = 'login.html';
     }
     function ciSyncNav() {
       const user = ciGetUser();
