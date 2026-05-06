@@ -643,6 +643,14 @@ try {
   </footer>
 
   <script>
+    // Required Login
+   function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+
+    const userID = ciGetUserID();
+    if (!userID) {
+      window.location.href = 'login.html';
+    }
+
     // ── Advanced Search (sidebar) ──
     function handleAdvancedSearch() {
       const keyword  = document.getElementById('searchKeyword').value.trim().toLowerCase();

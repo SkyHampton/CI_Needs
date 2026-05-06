@@ -672,6 +672,14 @@
 
   <script>
     // ── Auth check — backend will handle real admin check ──
+
+   function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+
+    const userID = ciGetUserID();
+    if (!userID) {
+      window.location.href = 'login.html';
+    }
+
     // TODO: Replace with real admin role check from backend
     // For demo, any logged-in user can view this page
     const user = JSON.parse(sessionStorage.getItem('ci_user') || 'null');
