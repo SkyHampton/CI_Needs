@@ -831,6 +831,12 @@
   </footer>
 
   <script>
+   function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+
+    const userID = ciGetUserID();
+    if (!userID) {
+      window.location.href = 'login.html';
+    }
     // ── Photo upload handlers ──
     function handlePhotoSelect(input) {
       if (input.files && input.files[0]) {
