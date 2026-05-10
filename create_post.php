@@ -39,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and sanitize text fields ── */
 $category  = strtolower(trim($_POST["category"]  ?? ""));
+$postType = strtolower(trim($_POST["postType"] ?? ""));
 $postTitle = trim($_POST["postTitle"] ?? "");
 $postData  = trim($_POST["postData"]  ?? "");
 $contact   = trim($_POST["contact"]   ?? "");
@@ -134,12 +135,13 @@ try {
     );
 
     $stmt = $db->prepare(
-        "INSERT INTO $table (userID, category, postTitle, postData, contact, imagePath, postDate, offerExpDate)
-         VALUES (:userID, :category, :postTitle, :postData, :contact, :imagePath, :postDate, :offerExpDate)"
+        "INSERT INTO $table (userID, postType, category, postTitle, postData, contact, imagePath, postDate, offerExpDate)
+         VALUES (:userID, :postType, :category, :postTitle, :postData, :contact, :imagePath, :postDate, :offerExpDate)"
     );
 
     $stmt->execute([
         ":userID"       => $userID,
+        ":postType"     => $postType,
         ":category"     => $category,
         ":postTitle"    => $postTitle,
         ":postData"     => $postData,
