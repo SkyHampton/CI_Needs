@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 /* ── Configuration ── */
 $host     = "137.184.46.194";
 $user     = "cineedsc_sky";
@@ -43,16 +44,13 @@ try {
     $stmt = $db->prepare("SELECT * FROM CIN_User WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    error_log($userData['banned']);
-    if ($userData['banned']) {
-        http_response_code(401);
-        respond(false, "You have been banned.");
-    }
-
     if (!$userData || $password_input != $userData['password']) {
         http_response_code(401);
         respond(false, "Invalid email or password.");
+    }
+    if ($userData['banned']) {
+        http_response_code(401);
+        respond(false, "You have been banned.");
     }
 
     /* ── Set session ── */
