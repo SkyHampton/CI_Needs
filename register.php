@@ -2,10 +2,10 @@
 session_start();
 
 /* ── Configuration ── */
-$host     = "137.184.46.194";
-$user     = "cineedsc_sky";
-$password = "N3ph@ndus";
-$database = "cineedsc_db";
+$host          = "137.184.46.194";
+$user          = "cineedsc_sky";
+$password      = "N3ph@ndus";
+$database      = "cineedsc_db";
 
 /* ── Helper ── */
 function respond(bool $ok, string $message, array $extra = []): void {
@@ -21,26 +21,32 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 /* ── Collect fields ── */
-$email    = trim($_POST["email"]    ?? "");
-$username = trim($_POST["username"] ?? "");
-$password_input = $_POST["password"] ?? "";
+$email          = trim($_POST["email"]    ?? "");
+$password_input = $_POST["password"]      ?? "";
 
 /* ── Validate: required fields ── */
-if ($email === "" || $username === "" || $password_input === "") {
+if ($email === "" || $password_input === "") {
     http_response_code(422);
-    respond(false, "Email, username, and password are required.");
+    respond(false, "Email and password are required.");
 }
 
 /* ── Validate: must be @myci.csuci.edu ── */
-if (!str_ends_with($email, "@myci.csuci.edu")) {
+if (!str_ends_with(strtolower($email), "@myci.csuci.edu")) {
     http_response_code(422);
     respond(false, "Email must end with @myci.csuci.edu.");
 }
 
-/* ── Validate: username max 32 characters ── */
-if (strlen($username) > 32) {
-    http_response_code(422);
-    respond(false, "Username must be 32 characters or fewer.");
+/*
+ * Derive a display name from the email local-part so the dashboard
+ * avatar and sidebar always have something to show.
+ * e.g. jane.doe@myci.csuci.edu  →  "Jane"
+ * Users can update this later from Account Settings.
+ */
+$localPart   = explode("@", $email)[0];          // "jane.doe"
+$firstPart   = explode(".", $localPart)[0];       // "jane"
+$displayName = ucfirst(strtolower($firstPart));  // "Jane"
+if (strlen($displayName) > 32) {
+    $displayName = substr($displayName, 0, 32);
 }
 
 /* ── Insert into DB ── */
@@ -67,19 +73,19 @@ try {
     );
     $stmt->execute([
         ":email"    => $email,
-        ":username" => $username,
+        ":username" => $displayName,
         ":password" => $password_input,
     ]);
 
-    $newUserID = $db->lastInsertId();
+    $newUserID = (int) $db->lastInsertId();
 
-    /* ── Auto login after registration ── */
+    /* ── Auto-login after registration ── */
     $_SESSION["userID"] = $newUserID;
     $_SESSION["admin"]  = 0;
 
     respond(true, "Account created successfully.", [
         "userID" => $newUserID,
-        "admin"  => 0
+        "admin"  => 0,
     ]);
 
 } catch (PDOException $e) {

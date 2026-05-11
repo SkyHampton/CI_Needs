@@ -824,15 +824,18 @@ try {
         <button class="dash-nav-item active" onclick="showPanel('posts')">
           <span class="nav-icon"></span> My Posts
         </button>
-        <button class="dash-nav-item" onclick="showPanel('messages')">
+        <button class="dash-nav-item" onclick="showPanel('comments')">
           <span class="nav-icon"></span> Comments
         </button>
-        <!-- <button class="dash-nav-item" onclick="showPanel('preferences')">
+        <button class="dash-nav-item" onclick="showPanel('messages')">
+          <span class="nav-icon"></span> Messages
+        </button>
+        <button class="dash-nav-item" onclick="showPanel('preferences')">
           <span class="nav-icon"></span> Notifications
         </button>
         <button class="dash-nav-item" onclick="showPanel('account')">
           <span class="nav-icon"></span> Account Settings
-        </button> -->
+        </button>
         <button class="dash-nav-item nav-logout" onclick="ciLogout()" style="color:var(--crimson);">
           <span class="nav-icon"></span> Sign Out
         </button>
@@ -916,7 +919,7 @@ try {
       </div>
 
       <!-- COMMENTS PANEL -->
-      <div class="dash-panel" id="panelMessages">
+      <div class="dash-panel" id="panelComments">
         <div class="card">
           <div class="panel-header">
             <h2 class="section-title">Comments</h2>
@@ -970,6 +973,18 @@ try {
             style="margin-top:16px; padding-top:16px; border-top:1px solid var(--light-gray); font-size:0.82rem; color:var(--mid-gray);">
             Full messaging with reply functionality coming in a future sprint.
           </div> -->
+        </div>
+      </div>
+
+      <!-- MESSAGES PANEL -->
+      <div class="dash-panel" id="panelMessages">
+        <div class="card">
+          <div class="panel-header">
+            <h2 class="section-title">Messages</h2>
+          </div>
+          <p style="text-align:center; padding:32px 0; color:var(--mid-gray); font-size:0.92rem;">
+            No messages yet. Direct messaging coming soon.
+          </p>
         </div>
       </div>
 
@@ -1095,7 +1110,6 @@ try {
       document.querySelectorAll('.dash-nav-item').forEach(b => b.classList.remove('active'));
       document.getElementById('panel' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
       event.currentTarget.classList.add('active');
-      if (id === 'messages') document.getElementById('msgBadge').style.display = 'none';
     }
 
     // ── Toast ──

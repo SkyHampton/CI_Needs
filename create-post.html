@@ -655,7 +655,7 @@
           <span class="type-label">I Need Something</span>
           <span class="type-sub">Post a request for help or donations</span>
         </div>
-        <div class="type-option" id="typeHave" onclick="selectType('have')">
+        <div class="type-option" id="typeHave" onclick="selectType('offering')">
           <span class="type-icon"></span>
           <span class="type-label">I'm Offering Something</span>
           <span class="type-sub">Donate or share an item or service</span>
@@ -956,6 +956,7 @@
 
       // Build FormData for backend
       const formData = new FormData();
+      formData.append('postType', selectedType);
       formData.append('category', category);
       formData.append('postTitle', title);
       formData.append('postData', desc);
