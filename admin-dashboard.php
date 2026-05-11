@@ -170,14 +170,14 @@
         <span class="admin-badge">Admin</span>
         <span style="color:rgba(255,255,255,0.5);">CI Needs Administration Panel</span>
       </div>
-      <a href="index.html">← Back to Main Site</a>
+      <a href="index.php">← Back to Main Site</a>
     </div>
   </div>
 
   <!-- HEADER -->
   <header>
     <div class="header-inner">
-      <a class="logo" href="admin-dashboard.html">
+      <a class="logo" href="admin-dashboard.php">
         <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:36px; width:auto; filter:brightness(0) invert(1);"/>
         <div class="logo-text">
           <span>CI Needs</span>
@@ -186,7 +186,7 @@
       </a>
       <div class="header-right">
         <span class="admin-name" id="adminNameLabel">Admin</span>
-        <a href="index.html" class="btn-view-site">View Site</a>
+        <a href="index.php" class="btn-view-site">View Site</a>
         <a href=# class="btn-logout" onclick="ciLogout()">Sign Out</a>
 
       </div>
