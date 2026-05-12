@@ -343,15 +343,20 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               $reply_count  = $reply_stmt->fetchColumn();
               $card_class   = $isFulfilled ? 'need-card fulfilled' : 'need-card';
               $safe_title   = htmlspecialchars($post_row['postTitle'], ENT_QUOTES, 'UTF-8');
+              $safe_type   = htmlspecialchars($post_row['postType'],     ENT_QUOTES, 'UTF-8');
               $safe_data    = htmlspecialchars($post_row['postData'],  ENT_QUOTES, 'UTF-8');
               $safe_user    = htmlspecialchars($post_row['username'],  ENT_QUOTES, 'UTF-8');
               $safe_email   = htmlspecialchars($post_row['email'],     ENT_QUOTES, 'UTF-8');
               $safe_dp      = htmlspecialchars($post_row['postDate'],  ENT_QUOTES, 'UTF-8');
               $post_id      = (int)$post_row['postID'];
+
+              if ($safe_type == "") {
+                $safe_type = "Unknown Type";
+              }
             ?>
             <div class="<?= $card_class ?>">
               <div class="need-card-top">
-                <div><h3><?= $safe_title ?></h3></div>
+                <div><h3><?= $safe_title ?> (<?= $safe_type?>)</h3></div>
                 <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
                   <span class="tag tag-<?= $category ?>"><?= $uc_category ?></span>
                   <?php if ($isFulfilled): ?><span class="fulfilled-ribbon"> Fulfilled</span><?php endif; ?>
