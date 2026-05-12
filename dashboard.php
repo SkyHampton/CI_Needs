@@ -870,7 +870,7 @@ try {
                     echo "<div class=\"post-row\">
                             <div class=\"post-row-info\">
                                 <div class=\"post-row-title\">
-                                <span class=\"tag tag-need\">{$postRow['postType']}</span>
+                                <span class=\"tag tag-need\">" . ucfirst($postRow['postType']) . "</span>
                                 {$postRow['postTitle']}
                                 </div>
                                 <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
