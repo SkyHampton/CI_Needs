@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and sanitize text fields ── */
 $category  = strtolower(trim($_POST["category"]  ?? ""));
-$postType = strtolower(trim($_POST["postType"] ?? ""));
+$postType = ucfirst(strtolower(trim($_POST["postType"] ?? "")));
 $postTitle = trim($_POST["postTitle"] ?? "");
 $postData  = trim($_POST["postData"]  ?? "");
 $contact   = trim($_POST["contact"]   ?? "");
