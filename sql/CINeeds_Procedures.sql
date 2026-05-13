@@ -33,13 +33,14 @@ DROP PROCEDURE IF EXISTS flag_post;
 DELIMITER //
 CREATE PROCEDURE flag_post (
     IN inPostID INT, 
+    IN inUserID INT,
     IN inFlagReason VARCHAR(40), 
     IN inFlagComment TINYTEXT
 )
 BEGIN
     -- Insert into flag log table
-    INSERT INTO CIN_Flag (postID, flagReason, flagComment)
-    VALUES (inPostID, inFlagReason, inFlagComment);
+    INSERT INTO CIN_Flag (postID, userID, flagReason, flagComment)
+    VALUES (inPostID, inUserID, inFlagReason, inFlagComment);
 
     -- Increment flag count in post table
     UPDATE CIN_Post 

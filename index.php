@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // ── Database connection + all queries run once at the top ──
 $host      = "137.184.46.194";
 $user      = "cineedsc_sky";
@@ -350,6 +352,27 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               $safe_dp      = htmlspecialchars($post_row['postDate'],  ENT_QUOTES, 'UTF-8');
               $post_id      = (int)$post_row['postID'];
 
+              $isFlagged = false;
+
+              if (isset($_SESSION['userID'])) {
+
+                  $flag_check = $db->prepare("
+                      SELECT flagID
+                      FROM CIN_Flag
+                      WHERE postID = ?
+                      AND userID = ?
+                  ");
+
+                  $flag_check->execute([
+                      $post_id,
+                      $_SESSION['userID']
+                  ]);
+
+                  if ($flag_check->fetch()) {
+                      $isFlagged = true;
+                  }
+              }
+
               if ($safe_type == "") {
                 $safe_type = "Unknown Type";
               }
@@ -367,7 +390,11 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               <div class="need-card-meta">
                 <span>Posted on <?= $safe_dp ?> · <?= $safe_user ?> (<?= $safe_email ?>)</span>
                 <button class="respond-btn">Respond</button>
-                <button class="flag-btn" onclick="openFlagModal(this)" title="Flag this post"> Flag</button>
+                <?php if ($isFlagged): ?>
+                    <button class="flag-btn flagged" disabled> Flagged</button>
+                <?php else: ?>
+                    <button class="flag-btn" onclick="openFlagModal(this, <?= $post_id ?>)" title="Flag this post"> Flag</button>
+                <?php endif; ?>
               </div>
               <div class="comments-section">
                 <button class="comments-toggle" onclick="toggleComments(this)">
@@ -632,8 +659,10 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
 
     // ── Flag modal ──
     let currentFlagBtn = null;
-    function openFlagModal(btn) {
+    let currentPostID = null;
+    function openFlagModal(btn, postID) {
       currentFlagBtn = btn;
+      currentPostID = postID;
       document.getElementById('flagReason').value  = '';
       document.getElementById('flagComment').value = '';
       document.getElementById('flagModal').classList.add('open');
@@ -642,10 +671,46 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
     function closeFlagModal() { document.getElementById('flagModal').classList.remove('open'); document.body.style.overflow = ''; }
     function submitFlag() {
       const reason = document.getElementById('flagReason').value;
-      if (!reason) { alert('Please select a reason for flagging.'); return; }
-      closeFlagModal();
-      if (currentFlagBtn) { currentFlagBtn.textContent = ' Flagged'; currentFlagBtn.classList.add('flagged'); currentFlagBtn.disabled = true; }
-      showToast(' Post reported. Thank you — our team will review it.');
+      const comment = document.getElementById('flagComment').value;
+      if (!reason) {
+        alert('Please select a reason for flagging.');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('postID', currentPostID);
+      formData.append('flagReason', reason);
+      formData.append('flagComment', comment);
+      fetch('flag_post.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+
+        if (data.success) {
+          closeFlagModal();
+
+          if (currentFlagBtn) {
+            currentFlagBtn.textContent = ' Flagged';
+            currentFlagBtn.classList.add('flagged');
+            currentFlagBtn.disabled = true;
+          }
+
+          showToast(' Post reported successfully.');
+
+          setTimeout(() => {
+            location.reload();
+          }, 500);
+
+        } else {
+          alert(data.message);
+        }
+
+      })
+      .catch(error => {
+        console.error(error);
+        alert('Failed to submit report.');
+      });
     }
     document.addEventListener('keydown', e => { if (e.key==='Escape') closeFlagModal(); });
 

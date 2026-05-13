@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 /* ── Configuration ── */
 $host     = "137.184.46.194";
 $user     = "cineedsc_sky";
@@ -20,22 +22,14 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and sanitize fields ── */
 $postID  = (int)   ($_POST["postID"]  ?? 0);
-$adminID = (int)   ($_POST["adminID"] ?? 0);
-$reason  = trim(   $_POST["reason"]   ?? "");
+$adminID = (int) ($_POST["adminID"] ?? ($_SESSION["userID"] ?? 0));
+$reason = trim($_POST["reason"] ?? "Deleted by user");
 
 /* ── Validate required fields ── */
 $errors = [];
 
 if ($postID <= 0) {
     $errors[] = "A valid postID is required.";
-}
-if ($adminID <= 0) {
-    $errors[] = "A valid adminID is required.";
-}
-if ($reason === "") {
-    $errors[] = "A reason is required.";
-} elseif (strlen($reason) > 255) {
-    $errors[] = "Reason must be 255 characters or fewer.";
 }
 
 if (!empty($errors)) {
@@ -68,6 +62,35 @@ try {
     if (!$adminCheck->fetch()) {
         http_response_code(403);
         respond(false, "Admin user not found.");
+    }
+    
+    $postOwnerCheck = $db->prepare("
+        SELECT userID
+        FROM CIN_Post
+        WHERE postID = :postID
+    ");
+
+    $postOwnerCheck->execute([
+        ":postID" => $postID
+    ]);
+
+    $postOwner = $postOwnerCheck->fetch(PDO::FETCH_ASSOC);
+
+    if (!$postOwner) {
+        respond(false, "Post not found.");
+    }
+
+    /* allow if:
+    - owner deleting own post
+    - OR admin removing post
+    */
+
+    $currentUserID = $_SESSION['userID'] ?? 0;
+
+    $isOwner = ($postOwner['userID'] == $currentUserID);
+
+    if (!$isOwner && $adminID != $currentUserID) {
+        respond(false, "Unauthorized action.");
     }
 
     /* Call the stored procedure — copies post to graveyard then deletes from CIN_Post */

@@ -876,9 +876,17 @@ try {
                                 <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
                             </div>
                             <div class=\"post-row-actions\">
-                                <button class=\"btn-sm btn-fulfill\" onclick=\"showToast(' Marked as fulfilled!')\">Fulfilled</button>
+                                <form action=\"mark_fullfilled.php\" method=\"POST\" style=\"display:inline;\">
+                                  <input type=\"hidden\" name=\"postID\" value=\"{$postRow['postID']}\">
+                                  <button class=\"btn-sm btn-fulfill\" type=\"submit\">Fulfilled</button>
+                                </form>
+                                
                                 <button class=\"btn-sm btn-edit\" onclick=\"showToast(' Edit — connect to backend')\">Edit</button>
-                                <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
+                                
+                                <form action=\"graveyard_post.php\" method=\"POST\" style=\"display:inline;\">
+                                  <input type=\"hidden\" name=\"postID\" value=\"{$postRow['postID']}\">
+                                  <button class=\"btn-sm btn-delete\" type=\"submit\">Delete</button>
+                              </form>
                             </div>
                             </div>";
                 }

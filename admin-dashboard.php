@@ -262,7 +262,13 @@
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
               foreach($db->query("SELECT * FROM $flag_table INNER JOIN $post_table ON $flag_table.postID = $post_table.postID") as $flag_row){
-                $flag_count = $db->query("SELECT COUNT(flagID) AS count FROM $flag_table WHERE postID = {$flag_row['postID']}");
+                $flag_count_stmt = $db->query("
+                  SELECT COUNT(flagID) AS count
+                  FROM $flag_table
+                  WHERE postID = {$flag_row['postID']}
+              ");
+
+              $flag_count = $flag_count_stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
                 $post_card = 
                   "<div class=\"admin-post\">
@@ -284,8 +290,26 @@
                     </div>
                     <div class=\"admin-post-body\">{$flag_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      <button class=\"btn-a btn-approve\"  onclick=\"adminAction('Post approved and restored to feed.', this)\"> Delete Flag</button>
-                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\">Delete Post</button>
+
+                      <button class=\"btn-a btn-approve\"
+                        onclick=\"adminAction('Post approved and restored to feed.', this)\">
+                        Delete Flag
+                      </button>
+
+                      <form action=\"graveyard_post.php\" method=\"POST\" style=\"display:inline;\">
+
+                        <input type=\"hidden\" name=\"postID\" value=\"{$flag_row['postID']}\">
+
+                        <input type=\"hidden\" name=\"adminID\" value=\"1\">
+
+                        <input type=\"hidden\" name=\"reason\" value=\"Removed by admin due to flags\">
+
+                        <button class=\"btn-a btn-delete\" type=\"submit\">
+                          Delete Post
+                        </button>
+
+                      </form>
+
                     </div>
                   </div>";
 
@@ -414,8 +438,16 @@
                     <div class=\"admin-post-meta\"><span>{$post_row['category']}</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
                     <div class=\"admin-post-body\">{$post_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      <button class=\"btn-a btn-fulfill\"  onclick=\"adminAction('Post marked as fulfilled.', this)\"> Fulfilled</button>
-                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
+                      
+                      <form action=\"mark_fullfilled.php\" method=\"POST\" style=\"display:inline;\">
+                        <input type=\"hidden\" name=\"postID\" value=\"{$post_row['postID']}\">
+                        <button class=\"btn-a btn-fulfill\" type=\"submit\">Fulfilled</button>
+                      </form>
+
+                      <form action=\"graveyard_post.php\" method=\"POST\" style=\"display:inline;\">
+                        <input type=\"hidden\" name=\"postID\" value=\"{$post_row['postID']}\">
+                        <button class=\"btn-a btn-delete\" type=\"submit\">Remove</button>
+                      </form>
                     </div>
                   </div>";
 
