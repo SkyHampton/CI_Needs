@@ -15,7 +15,10 @@ if ($_SERVER["REQUEST_METHOD"]=="POST"){
         $stmt->execute([$postID, $userID, $replyData, date('Y-m-d')]);
     } catch (PDOException $e) {
         print "Error!: " . $e->getMessage(). "<br/>";
+        http_response_code(500);
         die();
     }
 }
+
+http_response_code(201);
 ?>

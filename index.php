@@ -655,7 +655,8 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
       const count = list.querySelectorAll('.comment-item').length;
       btn.textContent = ' ' + count + ' comment' + (count!==1?'s':'') + ' — ' + (open?'hide':'show');
     }
-    function submitComment(input, postID) {
+    
+    async function submitComment(input, postID) {
       const text = input.value.trim();
       if (!text) return;
       const formData = new FormData();
@@ -663,8 +664,11 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
       formData.append('replyData', text);
       formData.append('postID',    postID);
       formData.append('userID',    userID);
-      fetch('post-comment.php', { method:'POST', body:formData });
-      setTimeout(() => { location.reload(); }, 500);
+      const response = await fetch('post-comment.php', { method:'POST', body:formData });
+      console.log(response.ok);
+      if (response.ok) {
+        location.reload();
+      }
     }
 
     // ── Toast ──
