@@ -366,7 +366,6 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               <p><?= $safe_data ?></p>
               <div class="need-card-meta">
                 <span>Posted on <?= $safe_dp ?> · <?= $safe_user ?> (<?= $safe_email ?>)</span>
-                <button class="respond-btn">Respond</button>
                 <button class="flag-btn" onclick="openFlagModal(this)" title="Flag this post"> Flag</button>
               </div>
               <div class="comments-section">
@@ -395,7 +394,7 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
                 </div>
                 <div class="comment-input-row">
                   <input type="text" placeholder="Add a comment…" onkeydown="if(event.key==='Enter') submitComment(this,<?= $post_id ?>)" />
-                  <button class="comment-submit" onclick="submitComment(this.previousElementSibling,<?= $post_id ?>)"></button>
+                  <button class="comment-submit" onclick="submitComment(this.previousElementSibling,<?= $post_id ?>)">➤</button>
                 </div>
                 <div class="guidelines-note">Be respectful and helpful. <a href="community-guidelines.html">Community Guidelines</a></div>
               </div>
