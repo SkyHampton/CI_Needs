@@ -1,6 +1,6 @@
 <?php
 // DB connection
-$conn = new mysqli("localhost", "root", "", "cineeds_db");
+$conn = new mysqli("localhost", "root", "", "cineedsc_db");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
@@ -38,7 +38,32 @@ if ($post['fulfilled']) {
 }
 
 // Ownership check (recommended)
-if ($userID && $post['userID'] != $userID) {
+$isOwner = ($post['userID'] == $userID);
+
+/* Check if current user is admin */
+$adminCheck = $conn->prepare("
+    SELECT admin
+    FROM CIN_User
+    WHERE userID = ?
+");
+
+$adminCheck->bind_param("i", $userID);
+
+$adminCheck->execute();
+
+$adminResult = $adminCheck->get_result();
+
+$isAdmin = false;
+
+if ($adminResult->num_rows > 0) {
+
+    $adminData = $adminResult->fetch_assoc();
+
+    $isAdmin = (bool)$adminData['admin'];
+}
+
+/* Allow owner OR admin */
+if (!$isOwner && !$isAdmin) {
     die("Unauthorized action");
 }
 

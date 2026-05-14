@@ -604,10 +604,10 @@
                 $graveyard_post_card = 
                   "<div class=\"graveyard-post\">
                     <div class=\"admin-post-top\" style=\"margin-bottom:4px;\">
-                      <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>\
+                      <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>
                       <button class=\"btn-a btn-restore\" onclick=\"adminAction('Post restored to feed.', this)\" style=\"font-size:0.75rem; padding:4px 10px;\">↺ Restore</button>
                     </div>
-                    <div class=\"graveyard-meta\">{$graveyard_row['category']} · {$graveyard_row['username']}({$graveyard_row['email']}) · Removed 3 days ago</div>
+                    <div class=\"graveyard-meta\">{$graveyard_row['category']}({$graveyard_row['contact']}) · Removed 3 days ago</div>
                     <div class=\"graveyard-reason\">Reason: {$graveyard_row['reason']}</div>
                   </div>";
 
