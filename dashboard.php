@@ -1135,11 +1135,6 @@ try {
     function ciGetUser() {
       try { return JSON.parse(sessionStorage.getItem('ci_user')); } catch (e) { return null; }
     }
-    function ciLogout() {
-      sessionStorage.removeItem('ci_user');
-      localStorage.removeItem('ci_profile');
-      window.location.href = 'index.php';
-    }
     function ciSyncNav() {
       const user = ciGetUser();
       const loginLink = document.getElementById('navLoginLink');
