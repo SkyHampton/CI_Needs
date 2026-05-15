@@ -250,8 +250,8 @@
         <h4>Site Overview</h4>
         <div class="admin-stat-row"><span class="label">Total Posts</span><span class="value"><?=$postCountResult['postCount']?></span></div>
         <div class="admin-stat-row"><span class="label">Deleted Posts</span><span class="value red"><?=$deletedCountResult['deletedCount']?></span></div>
-        <div class="admin-stat-row"><span class="label">Flagged</span><span class="value red"><?=$flagCountResult['flagCount']?></span></div>
-        <div class="admin-stat-row"><span class="label">Fulfilled</span><span class="value green"><?=$fulfilledCountResult['fulfilledCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Flagged Posts</span><span class="value red"><?=$flagCountResult['flagCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Fulfilled Posts</span><span class="value green"><?=$fulfilledCountResult['fulfilledCount']?></span></div>
         <div class="admin-stat-row"><span class="label">Total Users</span><span class="value"><?=$userCountResult['userCount']?></span></div>
         <div class="admin-stat-row"><span class="label">Banned Users</span><span class="value red"><?=$userBannedCountResult['userCount']?></span></div>
       </div>
