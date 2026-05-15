@@ -71,7 +71,7 @@ try {
     // TODO: Post type — add once AJ adds type column:
     // if ($searchType !== '') { $sql .= " AND {$post_table}.type = ?"; $params[] = $searchType; }
 
-    $sql .= " ORDER BY {$post_table}.postDate DESC LIMIT 20";
+    $sql .= " ORDER BY {$post_table}.postID DESC LIMIT 20";
     $stmt = $db->prepare($sql);
     $stmt->execute($params);
     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
