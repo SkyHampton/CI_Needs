@@ -178,7 +178,7 @@
   <header>
     <div class="header-inner">
       <a class="logo" href="admin-dashboard.php">
-        <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:36px; width:auto; filter:brightness(0) invert(1);"/>
+        <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:36px; width:auto; filter:brightness(1) invert(0);"/>
         <div class="logo-text">
           <span>CI Needs</span>
           <span>Admin <em>Dashboard</em></span>
