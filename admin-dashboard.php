@@ -394,20 +394,6 @@
         <div class="panel-header">
           <h2 class="panel-title"> All Posts</h2>
           <div style="display:flex; gap:8px;">
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Categories</option>
-              <option>Food</option>
-              <option>Housing</option>
-              <option>Financial</option>
-              <option>Health</option>
-              <option>Academic</option>
-              <option>Other</option>
-            </select>
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Types</option>
-              <option>Needs</option>
-              <option>Offerings</option>
-            </select>
           </div>
         </div>
         <p class="panel-desc">
