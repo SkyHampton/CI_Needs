@@ -877,7 +877,7 @@ try {
                             </div>
                             <div class=\"post-row-actions\">
                                 <button class=\"btn-sm btn-fulfill\" onclick=\"showToast(' Marked as fulfilled!')\">Fulfilled</button>
-                                <button class=\"btn-sm btn-edit\" onclick=\"showToast(' Edit — connect to backend')\">Edit</button>
+                                <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
                                 <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
                             </div>
                             </div>";
