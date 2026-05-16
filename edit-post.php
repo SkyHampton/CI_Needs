@@ -204,7 +204,7 @@ $post_id_int   = (int)$post['postID'];
     <div class="form-panel" id="editForm">
 
       <div class="edit-notice">
-        ✏️ Editing: <strong>&ldquo;<?= $safe_title ?>&rdquo;</strong>
+        Editing: <strong>&ldquo;<?= $safe_title ?>&rdquo;</strong>
       </div>
 
       <!-- Post Type -->
@@ -275,7 +275,7 @@ $post_id_int   = (int)$post['postID'];
             <div class="existing-photo-label">Current photo</div>
             <button type="button"
               style="margin-top:6px; background:none; border:none; color:var(--crimson); font-size:0.8rem; font-weight:600; cursor:pointer; font-family:'Source Sans 3',sans-serif;"
-              onclick="removeExistingPhoto()">✕ Remove photo</button>
+              onclick="removeExistingPhoto()"> Remove photo</button>
           </div>
         <?php endif; ?>
 
@@ -298,7 +298,7 @@ $post_id_int   = (int)$post['postID'];
         <input type="file" id="postPhoto" accept="image/*" style="display:none;" onchange="handlePhotoSelect(this)"/>
         <button type="button" id="photoRemoveBtn"
           style="display:none; margin-top:6px; background:none; border:none; color:var(--crimson); font-size:0.8rem; font-weight:600; cursor:pointer; font-family:'Source Sans 3',sans-serif;"
-          onclick="removeNewPhoto()">✕ Remove new photo</button>
+          onclick="removeNewPhoto()"> Remove new photo</button>
         <div class="field-hint">Upload a new photo to replace the existing one, or remove it entirely.</div>
       </div>
 
@@ -341,7 +341,7 @@ $post_id_int   = (int)$post['postID'];
 
     <!-- Success screen -->
     <div class="success-panel" id="successPanel">
-      <h2>✅ Post updated!</h2>
+      <h2> Post updated!</h2>
       <p>Your changes have been saved and are now live in the feed.</p>
       <a href="index.php" class="btn-home">View Feed</a>
       <a href="dashboard.php" class="btn-home-outline">Back to Dashboard</a>
@@ -432,7 +432,7 @@ $post_id_int   = (int)$post['postID'];
         document.getElementById('photoPreview').src = e.target.result;
         document.getElementById('photoPreviewWrap').style.display = 'block';
         document.getElementById('photoPlaceholder').style.display = 'none';
-        document.getElementById('photoFileName').textContent = '📎 ' + file.name;
+        document.getElementById('photoFileName').textContent = ' ' + file.name;
         document.getElementById('photoFileName').style.display = 'block';
         document.getElementById('photoRemoveBtn').style.display = 'block';
         document.getElementById('photoDropZone').style.borderColor = 'var(--blue)';
