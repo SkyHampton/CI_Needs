@@ -394,20 +394,6 @@
         <div class="panel-header">
           <h2 class="panel-title"> All Posts</h2>
           <div style="display:flex; gap:8px;">
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Categories</option>
-              <option>Food</option>
-              <option>Housing</option>
-              <option>Financial</option>
-              <option>Health</option>
-              <option>Academic</option>
-              <option>Other</option>
-            </select>
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Types</option>
-              <option>Needs</option>
-              <option>Offerings</option>
-            </select>
           </div>
         </div>
         <p class="panel-desc">
@@ -428,12 +414,18 @@
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
               foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID ORDER BY $post_table.postID DESC") as $post_row){
-                $post_type_tag = lcfirst($post_row['postType']);
                 $category = ucfirst($post_row['category']);
+                if (boolval($post_row['fulfilled'])) {
+                  $post_type = "Fulfilled";
+                  $post_type_tag = "fulfilled";
+                } else {
+                  $post_type = $post_row['postType'];
+                  $post_type_tag = lcfirst($post_type);
+                }
                 $post_card = 
                   "<div class=\"admin-post\">
                     <div class=\"admin-post-top\">
-                      <div class=\"admin-post-title\"><span class=\"tag tag-$post_type_tag\">{$post_row['postType']}</span>&nbsp; {$post_row['postTitle']}</div>
+                      <div class=\"admin-post-title\"><span class=\"tag tag-$post_type_tag\">$post_type</span>&nbsp; {$post_row['postTitle']}</div>
                     </div>
                     <div class=\"admin-post-meta\"><span>$category</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
                     <div class=\"admin-post-body\">{$post_row['postData']}</div>

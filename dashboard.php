@@ -522,7 +522,7 @@ try {
       color: var(--crimson);
     }
 
-    .tag-have {
+    .tag-offering {
       background: #eef4fb;
       color: var(--blue);
     }
@@ -866,21 +866,29 @@ try {
                 $stmt = $db->prepare("SELECT * FROM CIN_Post WHERE userID = ?");
                 $stmt->execute([$_SESSION['userID']]);
                 $results = $stmt->fetchAll();
+                
                 foreach ($results as $postRow) {
-                    echo "<div class=\"post-row\">
-                            <div class=\"post-row-info\">
-                                <div class=\"post-row-title\">
-                                <span class=\"tag tag-need\">" . ucfirst($postRow['postType']) . "</span>
-                                {$postRow['postTitle']}
-                                </div>
-                                <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
-                            </div>
-                            <div class=\"post-row-actions\">
-                                <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
-                                <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
-                                <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
-                            </div>
-                            </div>";
+                  if (boolval($postRow['fulfilled'])) {
+                    $post_type = "Fulfilled";
+                    $post_type_tag = "fulfilled";
+                  } else {
+                    $post_type = $postRow['postType'];
+                    $post_type_tag = lcfirst($post_type);
+                  }
+                  echo "<div class=\"post-row\">
+                          <div class=\"post-row-info\">
+                              <div class=\"post-row-title\">
+                              <span class=\"tag tag-$post_type_tag\">" . $post_type . "</span>
+                              {$postRow['postTitle']}
+                              </div>
+                              <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
+                          </div>
+                          <div class=\"post-row-actions\">
+                              <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
+                              <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
+                              <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
+                          </div>
+                          </div>";
                 }
             } catch (PDOException $e) {
                 print "Error!: " . $e->getMessage(). "<br/>";
