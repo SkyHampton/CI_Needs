@@ -1,62 +1,23 @@
-<?php
 // DB connection
-$conn = new mysqli("localhost", "root", "", "cineeds_db");
+<?php
+$host = "137.184.46.194";
+$user = "cineedsc_sky";
+$password = "N3ph@ndus";
+$database = "cineedsc_db";
+$postID = $_POST['postID'];
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($_SERVER["REQUEST_METHOD"]=="POST"){
+    try {
+        $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+        $sql = "CALL fulfill_post(?)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([$postID]);
+    } catch (PDOException $e) {
+        print "Error!: " . $e->getMessage(). "<br/>";
+        http_response_code(500);
+        die();
+    }
 }
 
-session_start();
-
-// Get post ID
-$postID = $_POST['postID'] ?? null;
-
-if (!$postID) {
-    die("Invalid request");
-}
-
-// Optional: check ownership
-$userID = $_SESSION['userID'] ?? null;
-
-$check = $conn->prepare("
-    SELECT userID, fulfilled FROM CIN_Post WHERE postID = ?
-");
-$check->bind_param("i", $postID);
-$check->execute();
-$result = $check->get_result();
-
-if ($result->num_rows === 0) {
-    die("Post not found");
-}
-
-$post = $result->fetch_assoc();
-
-// Prevent double update
-if ($post['fulfilled']) {
-    echo "Post already fulfilled.";
-    exit;
-}
-
-// Ownership check (recommended)
-if ($userID && $post['userID'] != $userID) {
-    die("Unauthorized action");
-}
-
-// Update fulfilled
-$stmt = $conn->prepare("
-    UPDATE CIN_Post 
-    SET fulfilled = TRUE 
-    WHERE postID = ?
-");
-
-$stmt->bind_param("i", $postID);
-
-if ($stmt->execute()) {
-    echo "Post marked as fulfilled!";
-} else {
-    echo "Error: " . $stmt->error;
-}
-
-$stmt->close();
-$conn->close();
+http_response_code(201);
 ?>
