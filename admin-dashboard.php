@@ -438,7 +438,7 @@
                     <div class=\"admin-post-meta\"><span>$category</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
                     <div class=\"admin-post-body\">{$post_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      <button class=\"btn-a btn-fulfill\"  onclick=\"adminAction('Post marked as fulfilled.', this)\"> Fulfilled</button>
+                      <button class=\"btn-a btn-fulfill\"  onclick=\"fulfilPost({$post_row['postID']})\"> Fulfilled</button>
                       <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
                     </div>
                   </div>";
@@ -780,8 +780,13 @@
       toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 2800);
     }
 
-    function fulfilPost(postID) {
-
+    async function fulfilPost(postID) {
+      const formData = new FormData();
+      formData.append('postID',    postID);
+      const response = await fetch('mark_fullfilled.php', { method:'POST', body:formData });
+      if (response.ok) {
+        location.reload();
+      }
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
