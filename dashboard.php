@@ -876,7 +876,7 @@ try {
                                 <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
                             </div>
                             <div class=\"post-row-actions\">
-                                <button class=\"btn-sm btn-fulfill\" onclick=\"showToast(' Marked as fulfilled!')\">Fulfilled</button>
+                                <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
                                 <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
                                 <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
                             </div>
@@ -1143,6 +1143,15 @@ try {
         if (loginLink) loginLink.style.display = 'inline';
         if (logoutLink) logoutLink.style.display = 'none';
         if (userLabel) userLabel.style.display = 'none';
+      }
+    }
+
+    async function fulfilPost(postID) {
+      const formData = new FormData();
+      formData.append('postID',    postID);
+      const response = await fetch('mark_fullfilled.php', { method:'POST', body:formData });
+      if (response.ok) {
+        location.reload();
       }
     }
     ciSyncNav();
