@@ -22,7 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and sanitize fields ── */
 $postID  = (int)   ($_POST["postID"]  ?? 0);
-$adminID = (int) ($_POST["adminID"] ?? ($_SESSION["userID"] ?? 0));
+$currentUserID = $_SESSION['userID'] ?? 0;
+
+$adminID = $currentUserID;
 $reason = trim($_POST["reason"] ?? "Deleted by user");
 
 /* ── Validate required fields ── */
@@ -56,12 +58,26 @@ try {
     }
 
     /* Verify the admin exists and is a valid user */
-    $adminCheck = $db->prepare("SELECT userID FROM CIN_User WHERE userID = :adminID");
-    $adminCheck->execute([":adminID" => $adminID]);
+    /* Current logged-in user */
+    $currentUserID = $_SESSION['userID'] ?? 0;
 
-    if (!$adminCheck->fetch()) {
-        http_response_code(403);
-        respond(false, "Admin user not found.");
+    /* Get current user's admin status */
+    $userCheck = $db->prepare("
+        SELECT admin
+        FROM CIN_User
+        WHERE userID = :userID
+    ");
+
+    $userCheck->execute([
+        ":userID" => $currentUserID
+    ]);
+
+    $userData = $userCheck->fetch(PDO::FETCH_ASSOC);
+
+    $isAdmin = false;
+
+    if ($userData) {
+        $isAdmin = (bool)$userData['admin'];
     }
     
     $postOwnerCheck = $db->prepare("
@@ -85,11 +101,13 @@ try {
     - OR admin removing post
     */
 
-    $currentUserID = $_SESSION['userID'] ?? 0;
-
     $isOwner = ($postOwner['userID'] == $currentUserID);
 
-    if (!$isOwner && $adminID != $currentUserID) {
+    /* Allow:
+    - owner deleting own post
+    - admin removing any post
+    */
+    if (!$isOwner && !$isAdmin) {
         respond(false, "Unauthorized action.");
     }
 
