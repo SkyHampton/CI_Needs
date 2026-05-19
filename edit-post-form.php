@@ -1,5 +1,5 @@
 <?php
-/* ── edit-post.php — edit form page, pre-filled from database ── */
+/* ── edit-post-form.php — edit form page, pre-filled from database ── */
 
 session_start();
 

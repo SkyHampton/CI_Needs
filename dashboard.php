@@ -1,5 +1,10 @@
 <?php
 session_start();
+// Redirect to login if PHP session has expired or was never set
+if (empty($_SESSION['userID'])) {
+    header("Location: login.html");
+    exit;
+}
 $host      = "137.184.46.194";
 $user      = "cineedsc_sky";
 $password  = "N3ph@ndus";
@@ -885,7 +890,7 @@ try {
                           </div>
                           <div class=\"post-row-actions\">
                               <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
-                              <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
+                              <a href=\"edit-post-form.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
                               <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
                           </div>
                           </div>";
