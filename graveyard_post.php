@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 /* ── Configuration ── */
 $host     = "137.184.46.194";
 $user     = "cineedsc_sky";
@@ -20,22 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and sanitize fields ── */
 $postID  = (int)   ($_POST["postID"]  ?? 0);
-$adminID = (int)   ($_POST["adminID"] ?? 0);
-$reason  = trim(   $_POST["reason"]   ?? "");
+$currentUserID = $_SESSION['userID'] ?? 0;
+
+$adminID = $currentUserID;
+$reason = trim($_POST["reason"] ?? "Deleted by user");
 
 /* ── Validate required fields ── */
 $errors = [];
 
 if ($postID <= 0) {
     $errors[] = "A valid postID is required.";
-}
-if ($adminID <= 0) {
-    $errors[] = "A valid adminID is required.";
-}
-if ($reason === "") {
-    $errors[] = "A reason is required.";
-} elseif (strlen($reason) > 255) {
-    $errors[] = "Reason must be 255 characters or fewer.";
 }
 
 if (!empty($errors)) {
@@ -62,12 +58,57 @@ try {
     }
 
     /* Verify the admin exists and is a valid user */
-    $adminCheck = $db->prepare("SELECT userID FROM CIN_User WHERE userID = :adminID");
-    $adminCheck->execute([":adminID" => $adminID]);
+    /* Current logged-in user */
+    $currentUserID = $_SESSION['userID'] ?? 0;
 
-    if (!$adminCheck->fetch()) {
-        http_response_code(403);
-        respond(false, "Admin user not found.");
+    /* Get current user's admin status */
+    $userCheck = $db->prepare("
+        SELECT admin
+        FROM CIN_User
+        WHERE userID = :userID
+    ");
+
+    $userCheck->execute([
+        ":userID" => $currentUserID
+    ]);
+
+    $userData = $userCheck->fetch(PDO::FETCH_ASSOC);
+
+    $isAdmin = false;
+
+    if ($userData) {
+        $isAdmin = (bool)$userData['admin'];
+    }
+    
+    $postOwnerCheck = $db->prepare("
+        SELECT userID
+        FROM CIN_Post
+        WHERE postID = :postID
+    ");
+
+    $postOwnerCheck->execute([
+        ":postID" => $postID
+    ]);
+
+    $postOwner = $postOwnerCheck->fetch(PDO::FETCH_ASSOC);
+
+    if (!$postOwner) {
+        respond(false, "Post not found.");
+    }
+
+    /* allow if:
+    - owner deleting own post
+    - OR admin removing post
+    */
+
+    $isOwner = ($postOwner['userID'] == $currentUserID);
+
+    /* Allow:
+    - owner deleting own post
+    - admin removing any post
+    */
+    if (!$isOwner && !$isAdmin) {
+        respond(false, "Unauthorized action.");
     }
 
     /* Call the stored procedure — copies post to graveyard then deletes from CIN_Post */

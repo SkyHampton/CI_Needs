@@ -161,6 +161,6 @@ try {
 /* ── Success ──*/
 http_response_code(201);
 respond(true, "Post created successfully.", [
-    "postID"    => $newPostID,
+    // "postID"    => $newPostID,
     "imagePath" => $imagePath,
 ]);

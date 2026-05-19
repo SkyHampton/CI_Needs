@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 /* ── Configuration ── */
 $host     = "137.184.46.194";
 $user     = "cineedsc_sky";
@@ -20,6 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 
 /* ── Collect and validate postID ── */
 $postID = (int) ($_POST["postID"] ?? 0);
+$userID = $_SESSION['userID'] ?? 0;
+
+if ($userID <= 0) {
+    http_response_code(401);
+    respond(false, "Login required.");
+}
 
 if ($postID <= 0) {
     http_response_code(422);
@@ -36,7 +44,7 @@ try {
     );
 
     /* Verify the post actually exists before flagging */
-    $check = $db->prepare("SELECT postID, flagCount FROM CIN_Post WHERE postID = :postID");
+    $check = $db->prepare("SELECT postID FROM CIN_Post WHERE postID = :postID");
     $check->execute([":postID" => $postID]);
     $post = $check->fetch(PDO::FETCH_ASSOC);
 
@@ -44,12 +52,45 @@ try {
         http_response_code(404);
         respond(false, "Post not found.");
     }
+    
+    $alreadyFlagged = $db->prepare("
+    SELECT flagID
+    FROM CIN_Flag
+    WHERE postID = :postID
+    AND userID = :userID
+    ");
+
+    $alreadyFlagged->execute([
+        ":postID" => $postID,
+        ":userID" => $userID
+    ]);
+
+    if ($alreadyFlagged->fetch()) {
+        respond(false, "You already flagged this post.");
+    }
 
     /* Call the stored procedure */
-    $stmt = $db->prepare("CALL flag_post(:postID)");
-    $stmt->execute([":postID" => $postID]);
+    $stmt = $db->prepare("
+        INSERT INTO CIN_Flag (
+            postID,
+            userID,
+            flagReason,
+            flagComment
+        )
+        VALUES (
+            :postID,
+            :userID,
+            :flagReason,
+            :flagComment
+        )
+    ");
 
-    $newFlagCount = $post["flagCount"] + 1;
+    $stmt->execute([
+        ":postID" => $postID,
+        ":userID" => $userID,
+        ":flagReason" => $_POST['flagReason'] ?? '',
+        ":flagComment" => $_POST['flagComment'] ?? ''
+    ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
@@ -59,6 +100,5 @@ try {
 /* ── Success ── */
 http_response_code(200);
 respond(true, "Post flagged successfully.", [
-    "postID"    => $postID,
-    "flagCount" => $newFlagCount,
+    "postID"    => $postID
 ]);

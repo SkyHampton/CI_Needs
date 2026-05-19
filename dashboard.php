@@ -742,6 +742,30 @@ try {
       gap: 16px;
     }
 
+    .user-toast{
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background:#222;
+    color:white;
+
+    padding:12px 18px;
+
+    border-radius:8px;
+
+    opacity:0;
+
+    transition:0.3s;
+
+    z-index:9999;
+  }
+
+  .user-toast.show{
+      opacity:1;
+  }
+
     @media (max-width: 768px) {
       .dash-layout {
         grid-template-columns: 1fr;
@@ -887,13 +911,31 @@ try {
                               {$postRow['postTitle']}
                               </div>
                               <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
-                          </div>
-                          <div class=\"post-row-actions\">
-                              <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
-                              <a href=\"edit-post-form.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
-                              <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
-                          </div>
                           </div>";
+                  if (!$postRow['fulfilled']) {
+                    echo "<button
+                            class=\"btn-sm btn-fulfill\"
+                            onclick=\"fulfillPost({$postRow['postID']})\">
+                            Fulfill
+                          </button>";
+                  } else {
+                    echo "<button
+                            class=\"btn-sm btn-fulfill\"
+                            disabled
+                            style=\"opacity:0.6; cursor:not-allowed;\">
+                            Fulfilled
+                          </button>";
+                  }
+                  echo "
+                      <a href=\"edit-post-form.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
+
+
+                      <button
+                      class=\"btn-sm btn-delete\"
+                      onclick=\"deletePost({$postRow['postID']}, 'Deleted by user')\">
+                          Delete
+                      </button>
+                  </div>";
                 }
             } catch (PDOException $e) {
                 print "Error!: " . $e->getMessage(). "<br/>";
@@ -1102,6 +1144,8 @@ try {
     </div>
   </footer>
 
+  <div id="user-toast" class="user-toast"></div>
+
   <script>
     // ── Require login ──
     function ciGetUser() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
@@ -1168,6 +1212,99 @@ try {
       }
     }
     ciSyncNav();
+
+
+    async function deletePost(postID, reason){
+
+    const formData = new FormData();
+
+    formData.append('postID', postID);
+    formData.append('reason', reason);
+
+    try{
+
+        const response = await fetch(
+            'graveyard_post.php',
+            {
+                method:'POST',
+                body:formData
+            }
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            userAction(result.message);
+
+            setTimeout(()=>{
+                location.reload();
+            },1000);
+
+        }else{
+
+            userAction(result.message);
+
+        }
+
+    }catch(error){
+
+        userAction("Something went wrong");
+
+    }
+  }
+
+  function userAction(message){
+
+    const toast=document.getElementById("user-toast");
+
+    toast.textContent=message;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },3000);
+
+}
+
+async function fulfillPost(postID){
+
+    const formData = new FormData();
+
+    formData.append('postID', postID);
+
+    try{
+
+        const response = await fetch(
+            'mark_fullfilled.php',
+            {
+                method:'POST',
+                body:formData
+            }
+        );
+
+        const resultText = await response.text();
+
+        userAction(resultText);
+
+        setTimeout(()=>{
+
+            location.reload();
+
+        },1000);
+
+    }
+
+    catch(error){
+
+        userAction("Something went wrong");
+
+    }
+
+}
   </script>
 </body>
 

@@ -139,7 +139,8 @@ try {
              postTitle = :postTitle,
              postData  = :postData,
              contact   = :contact,
-             imagePath = :imagePath
+             imagePath = :imagePath,
+             fulfilled = FALSE
          WHERE postID = :postID"
     );
     $stmt->execute([
