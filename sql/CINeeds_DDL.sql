@@ -46,10 +46,12 @@ CREATE TABLE CIN_Reply (
 CREATE TABLE CIN_Flag (
     flagID INT AUTO_INCREMENT,
     postID INT,
+    userID INT,
     flagReason VARCHAR(40),
     flagComment TINYTEXT,
     PRIMARY KEY (flagID),
-    FOREIGN KEY (postID) REFERENCES CIN_Post (postID)
+    FOREIGN KEY (postID) REFERENCES CIN_Post (postID),
+    FOREIGN KEY (userID) REFERENCES CIN_User (userID)
 );
 
 
@@ -74,7 +76,6 @@ CREATE TABLE CIN_Graveyard (
 
     PRIMARY KEY (graveyardID),
 
-    FOREIGN KEY (postID) REFERENCES CIN_Post(postID),
     FOREIGN KEY (userID) REFERENCES CIN_User(userID),
     FOREIGN KEY (adminID) REFERENCES CIN_User(userID)
 );

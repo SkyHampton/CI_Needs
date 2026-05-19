@@ -272,6 +272,7 @@
         <div class="admin-card">
 
           <?php
+          #sql server login info
           $host = "137.184.46.194";
           $user = "cineedsc_sky";
           $password = "N3ph@ndus";
@@ -285,7 +286,13 @@
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
               foreach($db->query("SELECT * FROM $flag_table INNER JOIN $post_table ON $flag_table.postID = $post_table.postID") as $flag_row){
-                $flag_count = $db->query("SELECT COUNT(flagID) AS count FROM $flag_table WHERE postID = {$flag_row['postID']}");
+                $flag_count_stmt = $db->query("
+                  SELECT COUNT(flagID) AS count
+                  FROM $flag_table
+                  WHERE postID = {$flag_row['postID']}
+              ");
+
+              $flag_count = $flag_count_stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
                 $post_card = 
                   "<div class=\"admin-post\">
@@ -307,8 +314,18 @@
                     </div>
                     <div class=\"admin-post-body\">{$flag_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      <button class=\"btn-a btn-approve\"  onclick=\"adminAction('Post approved and restored to feed.', this)\"> Delete Flag</button>
-                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\">Delete Post</button>
+
+                      <button class=\"btn-a btn-approve\"
+                        onclick=\"adminAction('Post approved and restored to feed.', this)\">
+                        Delete Flag
+                      </button>
+
+                      <button
+                      class=\"btn-a btn-delete\"
+                      onclick=\"removePost({$flag_row['postID']}, 'Removed by admin due to flags')\">
+                      Delete Post
+                      </button>
+
                     </div>
                   </div>";
 
@@ -430,8 +447,18 @@
                     <div class=\"admin-post-meta\"><span>$category</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
                     <div class=\"admin-post-body\">{$post_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      <button class=\"btn-a btn-fulfill\"  onclick=\"fulfilPost({$post_row['postID']})\"> Fulfilled</button>
-                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
+                      
+                      <button
+                      class=\"btn-a btn-fulfill\"
+                      onclick=\"fulfillPost({$post_row['postID']})\">
+                      Fulfilled
+                      </button>
+
+                      <button
+                      class=\"btn-a btn-delete\"
+                      onclick=\"removePost({$post_row['postID']}, 'Removed by admin')\">
+                      Remove
+                      </button>
                     </div>
                   </div>";
 
@@ -590,9 +617,10 @@
                   "<div class=\"graveyard-post\">
                     <div class=\"admin-post-top\" style=\"margin-bottom:4px;\">
                       <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>
+                      <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>
                       <button class=\"btn-a btn-restore\" onclick=\"adminAction('Post restored to feed.', this)\" style=\"font-size:0.75rem; padding:4px 10px;\">↺ Restore</button>
                     </div>
-                    <div class=\"graveyard-meta\">$categoryUC · {$graveyard_row['username']}({$graveyard_row['email']}) · Removed on {$graveyard_row['deletedDate']}</div>
+                    <div class=\"graveyard-meta\">{$graveyard_row['category']}({$graveyard_row['contact']}) · Removed 3 days ago</div>
                     <div class=\"graveyard-reason\">Reason: {$graveyard_row['reason']}</div>
                   </div>";
 
@@ -782,6 +810,79 @@
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    async function removePost(postID, reason){
+
+    const formData = new FormData();
+
+    formData.append('postID', postID);
+    formData.append('reason', reason);
+
+    try{
+
+        const response = await fetch(
+            'graveyard_post.php',
+            {
+                method:'POST',
+                body:formData
+            }
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            adminAction(result.message);
+
+            setTimeout(()=>{
+                location.reload();
+            },1000);
+
+        } else{
+
+            adminAction(result.message);
+
+        }
+
+    }catch(error){
+
+        adminAction("Something went wrong");
+
+    }
+  }
+
+  async function fulfillPost(postID){
+
+    const formData = new FormData();
+
+    formData.append('postID', postID);
+
+    try{
+
+        const response = await fetch(
+            'mark_fullfilled.php',
+            {
+                method:'POST',
+                body:formData
+            }
+        );
+
+        const resultText = await response.text();
+
+        adminAction(resultText);
+
+        setTimeout(()=>{
+            location.reload();
+        },1000);
+
+    }
+    catch(error){
+
+        adminAction("Something went wrong");
+
+    }
+
+  }
   </script>
 </body>
 </html>
