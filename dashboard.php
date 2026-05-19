@@ -904,58 +904,38 @@ try {
                     $post_type = $postRow['postType'];
                     $post_type_tag = lcfirst($post_type);
                   }
-                  // echo "<div class=\"post-row\">
-                  //         <div class=\"post-row-info\">
-                  //             <div class=\"post-row-title\">
-                  //             <span class=\"tag tag-$post_type_tag\">" . $post_type . "</span>
-                  //             {$postRow['postTitle']}
-                  //             </div>
-                  //             <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
-                  //         </div>
-                  //         <div class=\"post-row-actions\">
-                  //             <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
-                  //             <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
-                  //             <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
-                  //         </div>
-                  //         </div>";
-                    echo "<div class=\"post-row\">
-                            <div class=\"post-row-info\">
-                                <div class=\"post-row-title\">
-                                <span class=\"tag tag-need\">" . ucfirst($postRow['postType']) . "</span>
-                                {$postRow['postTitle']}
-                                </div>
-                                <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
-                            </div>
-                            <div class=\"post-row-actions\">";
+                  echo "<div class=\"post-row\">
+                          <div class=\"post-row-info\">
+                              <div class=\"post-row-title\">
+                              <span class=\"tag tag-$post_type_tag\">" . $post_type . "</span>
+                              {$postRow['postTitle']}
+                              </div>
+                              <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
+                          </div>";
+                  if (!$postRow['fulfilled']) {
+                    echo "<button
+                            class=\"btn-sm btn-fulfill\"
+                            onclick=\"fulfillPost({$postRow['postID']})\">
+                            Fulfill
+                          </button>";
+                  } else {
+                    echo "<button
+                            class=\"btn-sm btn-fulfill\"
+                            disabled
+                            style=\"opacity:0.6; cursor:not-allowed;\">
+                            Fulfilled
+                          </button>";
+                  }
+                  echo "
+                      <a href=\"edit-post-form.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
 
-                              if (!$postRow['fulfilled']) {
 
-                                  echo "<button
-                                          class=\"btn-sm btn-fulfill\"
-                                          onclick=\"fulfillPost({$postRow['postID']})\">
-                                          Fulfill
-                                        </button>";
-
-                              } else {
-
-                                  echo "<button
-                                          class=\"btn-sm btn-fulfill\"
-                                          disabled
-                                          style=\"opacity:0.6; cursor:not-allowed;\">
-                                          Fulfilled
-                                        </button>";
-
-                              }
-
-                              echo "
-                                  <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
-
-                                  <button
-                                  class=\"btn-sm btn-delete\"
-                                  onclick=\"deletePost({$postRow['postID']}, 'Deleted by user')\">
-                                      Delete
-                                  </button>
-                              </div>";
+                      <button
+                      class=\"btn-sm btn-delete\"
+                      onclick=\"deletePost({$postRow['postID']}, 'Deleted by user')\">
+                          Delete
+                      </button>
+                  </div>";
                 }
             } catch (PDOException $e) {
                 print "Error!: " . $e->getMessage(). "<br/>";

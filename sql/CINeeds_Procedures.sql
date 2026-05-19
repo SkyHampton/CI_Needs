@@ -63,11 +63,11 @@ BEGIN
     -- Copy post to graveyard
     INSERT INTO CIN_Graveyard (
         postID, adminID, userID, postType, category, postTitle, 
-        postData, postDate, imagePath, contact, flagCount, reason, deletedDate
+        postData, postDate, imagePath, contact, reason, deletedDate
     )
     SELECT 
         postID, inAdminID, userID, postType, category, postTitle, 
-        postData, postDate, imagePath, contact, flagCount, inReason, CURDATE()
+        postData, postDate, imagePath, contact, inReason, CURDATE()
     FROM CIN_Post
     WHERE postID = inPostID;
 
