@@ -921,22 +921,36 @@ try {
                                 </div>
                                 <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
                             </div>
-                            <div class=\"post-row-actions\">
-                                <button
-                                class=\"btn-sm btn-fulfill\"
-                                onclick=\"fulfillPost({$postRow['postID']})\">
-                                Fulfilled
-                                </button>
-                                
-                                <button class=\"btn-sm btn-edit\" onclick=\"showToast(' Edit — connect to backend')\">Edit</button>
-                                
-                                <button
-                                class=\"btn-sm btn-delete\"
-                                onclick=\"deletePost({$postRow['postID']}, 'Deleted by user')\">
-                                Delete
-                                </button>
-                            </div>
-                            </div>";
+                            <div class=\"post-row-actions\">";
+
+                              if (!$postRow['fulfilled']) {
+
+                                  echo "<button
+                                          class=\"btn-sm btn-fulfill\"
+                                          onclick=\"fulfillPost({$postRow['postID']})\">
+                                          Fulfill
+                                        </button>";
+
+                              } else {
+
+                                  echo "<button
+                                          class=\"btn-sm btn-fulfill\"
+                                          disabled
+                                          style=\"opacity:0.6; cursor:not-allowed;\">
+                                          Fulfilled
+                                        </button>";
+
+                              }
+
+                              echo "
+                                  <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
+
+                                  <button
+                                  class=\"btn-sm btn-delete\"
+                                  onclick=\"deletePost({$postRow['postID']}, 'Deleted by user')\">
+                                      Delete
+                                  </button>
+                              </div>";
                 }
             } catch (PDOException $e) {
                 print "Error!: " . $e->getMessage(). "<br/>";
