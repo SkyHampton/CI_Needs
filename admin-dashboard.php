@@ -96,7 +96,7 @@
     /* Tags */
     .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
     .tag-need      { background: #fdf3f4; color: var(--crimson); }
-    .tag-have      { background: #eef4fb; color: var(--blue); }
+    .tag-offering      { background: #eef4fb; color: var(--blue); }
     .tag-flagged   { background: #fff0e0; color: var(--orange); }
     .tag-hold      { background: var(--warning-bg); color: var(--warning); }
     .tag-fulfilled { background: #edf7f2; color: var(--green); }
@@ -178,7 +178,7 @@
   <header>
     <div class="header-inner">
       <a class="logo" href="admin-dashboard.php">
-        <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:36px; width:auto; filter:brightness(0) invert(1);"/>
+        <img src="https://www.csuci.edu/img/brand/ci-logo.svg" alt="CSUCI Logo" style="height:36px; width:auto; filter:brightness(1) invert(0);"/>
         <div class="logo-text">
           <span>CI Needs</span>
           <span>Admin <em>Dashboard</em></span>
@@ -201,7 +201,6 @@
       <div class="admin-nav">
         <button class="admin-nav-item active" onclick="showPanel('flagged', this)">
           <span class="nav-icon"></span> Flagged Posts
-          <span class="nav-badge">3</span>
         </button>
         <button class="admin-nav-item" onclick="showPanel('all', this)">
           <span class="nav-icon"></span> All Posts
@@ -222,14 +221,39 @@
         </button>
       </div>
 
+      <?php
+      $host = "137.184.46.194";
+      $user = "cineedsc_sky";
+      $password = "N3ph@ndus";
+      $database = "cineedsc_db";
+      $flag_table = "CIN_Flag";
+      $post_table = "CIN_Post";
+      $user_table = "CIN_User";
+      $reply_table = "CIN_Reply";
+      $graveyard_table = "CIN_Graveyard";
+
+      try {
+        $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
+        $postCountResult = $db->query("SELECT COUNT(postID) AS postCount FROM $post_table")->fetch();
+        $flagCountResult =  $db->query("SELECT COUNT(flagID) AS flagCount FROM $flag_table")->fetch();
+        $deletedCountResult = $db->query("SELECT COUNT(graveyardID) AS deletedCount FROM $graveyard_table")->fetch();
+        $fulfilledCountResult = $db->query("SELECT COUNT(postID) AS fulfilledCount FROM $post_table WHERE fulfilled = TRUE")->fetch();
+        $userCountResult =  $db->query("SELECT COUNT(userID) AS userCount FROM $user_table")->fetch();
+        $userBannedCountResult =  $db->query("SELECT COUNT(userID) AS userCount FROM $user_table WHERE banned = TRUE")->fetch();
+      } catch (PDOException $e) {
+        print "Error!: " . $e->getMessage(). "<br/>";
+        die();
+      }
+      ?>
+
       <div class="admin-stats">
         <h4>Site Overview</h4>
-        <div class="admin-stat-row"><span class="label">Total Posts</span><span class="value">24</span></div>
-        <div class="admin-stat-row"><span class="label">Active Posts</span><span class="value green">19</span></div>
-        <div class="admin-stat-row"><span class="label">Flagged</span><span class="value red">3</span></div>
-        <div class="admin-stat-row"><span class="label">On Hold</span><span class="value orange">1</span></div>
-        <div class="admin-stat-row"><span class="label">Fulfilled</span><span class="value green">138</span></div>
-        <div class="admin-stat-row"><span class="label">Total Users</span><span class="value">312</span></div>
+        <div class="admin-stat-row"><span class="label">Total Posts</span><span class="value"><?=$postCountResult['postCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Deleted Posts</span><span class="value red"><?=$deletedCountResult['deletedCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Flagged Posts</span><span class="value red"><?=$flagCountResult['flagCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Fulfilled Posts</span><span class="value green"><?=$fulfilledCountResult['fulfilledCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Total Users</span><span class="value"><?=$userCountResult['userCount']?></span></div>
+        <div class="admin-stat-row"><span class="label">Banned Users</span><span class="value red"><?=$userBannedCountResult['userCount']?></span></div>
       </div>
     </aside>
 
@@ -248,7 +272,6 @@
         <div class="admin-card">
 
           <?php
-          #sql server login info
           $host = "137.184.46.194";
           $user = "cineedsc_sky";
           $password = "N3ph@ndus";
@@ -395,20 +418,6 @@
         <div class="panel-header">
           <h2 class="panel-title"> All Posts</h2>
           <div style="display:flex; gap:8px;">
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Categories</option>
-              <option>Food</option>
-              <option>Housing</option>
-              <option>Financial</option>
-              <option>Health</option>
-              <option>Academic</option>
-              <option>Other</option>
-            </select>
-            <select style="padding:6px 10px; border:1.5px solid var(--light-gray); border-radius:4px; font-size:0.85rem; font-family:'Source Sans 3',sans-serif;">
-              <option>All Types</option>
-              <option>Needs</option>
-              <option>Offerings</option>
-            </select>
           </div>
         </div>
         <p class="panel-desc">
@@ -428,26 +437,25 @@
           try {
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
-              foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID") as $post_row){
-
+              foreach($db->query("SELECT * FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID ORDER BY $post_table.postID DESC") as $post_row){
+                $category = ucfirst($post_row['category']);
+                if (boolval($post_row['fulfilled'])) {
+                  $post_type = "Fulfilled";
+                  $post_type_tag = "fulfilled";
+                } else {
+                  $post_type = $post_row['postType'];
+                  $post_type_tag = lcfirst($post_type);
+                }
                 $post_card = 
                   "<div class=\"admin-post\">
                     <div class=\"admin-post-top\">
-                      <div class=\"admin-post-title\"><span class=\"tag tag-{$post_row['postType']}\">{$post_row['postType']}</span>&nbsp; {$post_row['postTitle']}</div>
+                      <div class=\"admin-post-title\"><span class=\"tag tag-$post_type_tag\">$post_type</span>&nbsp; {$post_row['postTitle']}</div>
                     </div>
-                    <div class=\"admin-post-meta\"><span>{$post_row['category']}</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
+                    <div class=\"admin-post-meta\"><span>$category</span><span> {$post_row['username']}({$post_row['email']})</span><span>Posted on {$post_row['postDate']}</span></div>
                     <div class=\"admin-post-body\">{$post_row['postData']}</div>
                     <div class=\"admin-actions\">
-                      
-                      <form action=\"mark_fullfilled.php\" method=\"POST\" style=\"display:inline;\">
-                        <input type=\"hidden\" name=\"postID\" value=\"{$post_row['postID']}\">
-                        <button class=\"btn-a btn-fulfill\" type=\"submit\">Fulfilled</button>
-                      </form>
-
-                      <form action=\"graveyard_post.php\" method=\"POST\" style=\"display:inline;\">
-                        <input type=\"hidden\" name=\"postID\" value=\"{$post_row['postID']}\">
-                        <button class=\"btn-a btn-delete\" type=\"submit\">Remove</button>
-                      </form>
+                      <button class=\"btn-a btn-fulfill\"  onclick=\"fulfilPost({$post_row['postID']})\"> Fulfilled</button>
+                      <button class=\"btn-a btn-delete\"   onclick=\"confirmDelete(this)\"> Remove</button>
                     </div>
                   </div>";
 
@@ -599,15 +607,16 @@
           try {
               #connect to database
               $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
-              foreach($db->query("SELECT * FROM $graveyard_table") as $graveyard_row){
+              foreach($db->query("SELECT * FROM $graveyard_table INNER JOIN $user_table ON $graveyard_table.userID = $user_table.userID") as $graveyard_row){
                 #TODO: make restoring a post functional
+                $categoryUC = ucfirst($graveyard_row['category']);
                 $graveyard_post_card = 
                   "<div class=\"graveyard-post\">
                     <div class=\"admin-post-top\" style=\"margin-bottom:4px;\">
                       <div class=\"graveyard-post-title\"><span class=\"tag tag-removed\">Removed</span>&nbsp; {$graveyard_row['postTitle']}</div>
                       <button class=\"btn-a btn-restore\" onclick=\"adminAction('Post restored to feed.', this)\" style=\"font-size:0.75rem; padding:4px 10px;\">↺ Restore</button>
                     </div>
-                    <div class=\"graveyard-meta\">{$graveyard_row['category']}({$graveyard_row['contact']}) · Removed 3 days ago</div>
+                    <div class=\"graveyard-meta\">$categoryUC · {$graveyard_row['username']}({$graveyard_row['email']}) · Removed on {$graveyard_row['deletedDate']}</div>
                     <div class=\"graveyard-reason\">Reason: {$graveyard_row['reason']}</div>
                   </div>";
 
@@ -643,11 +652,14 @@
             $db = new PDO("mysql:host=$host;dbname=$database", $user, $password);
             foreach($db->query("SELECT * FROM $user_table") as $user_row){
               $banned = (bool)$user_row['banned'];
+              $query = $db->prepare("SELECT COUNT(postID) AS postCount FROM $post_table INNER JOIN $user_table ON $post_table.userID = $user_table.userID WHERE $user_table.userID = ?");
+              $query->execute([$user_row['userID']]);
+              $postCountResult = $query->fetch();
               $user_card_html = 
                 "<div style=\"padding:16px 18px; border-bottom:1px solid var(--light-gray); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;\">
                     <div>
-                    <div style=\"font-weight:700; font-size:0.92rem;\">{$user_row['username']} &nbsp; <span style=\"font-size:0.78rem; color:var(--mid-gray); font-weight:400;\"></span></div>
-                    <div style=\"font-size:0.78rem; color:var(--mid-gray); margin-top:2px;\">Member since Jan 2026 · 3 posts · 0 flags</div>
+                    <div style=\"font-weight:700; font-size:0.92rem;\">{$user_row['username']}({$user_row['email']}) &nbsp; <span style=\"font-size:0.78rem; color:var(--mid-gray); font-weight:400;\"></span></div>
+                    <div style=\"font-size:0.78rem; color:var(--mid-gray); margin-top:2px;\">{$postCountResult['postCount']} posts </div>
                     </div>
                     <div style=\"display:flex; gap:6px;\">
                     <button class=\"btn-a btn-message\" onclick=\"adminAction('Message sent to user.', this)\"> Message</button>
@@ -658,8 +670,8 @@
               $user_card_banned = 
               "<div style=\"padding:16px 18px; border-bottom:1px solid var(--light-gray); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;\">
                     <div>
-                    <div style=\"font-weight:700; font-size:0.92rem;\">{$user_row['username']} &nbsp; <span style=\"font-size:0.78rem; color:var(--mid-gray); font-weight:400;\"></span></div>
-                    <div style=\"font-size:0.78rem; color:var(--mid-gray); margin-top:2px;\">Member since Jan 2026 · 3 posts · 0 flags</div>
+                    <div style=\"font-weight:700; font-size:0.92rem;\">{$user_row['username']}({$user_row['email']}) &nbsp; <span style=\"font-size:0.78rem; color:var(--mid-gray); font-weight:400;\"></span></div>
+                    <div style=\"font-size:0.78rem; color:var(--mid-gray); margin-top:2px;\">{$postCountResult['postCount']} posts </div>
                     <span class=\"tag tag-flagged\" style=\"font-size:0.68rem;\">Banned</span>
                     </div>
                     <div style=\"display:flex; gap:6px;\">
@@ -784,8 +796,13 @@
       toastTimer = setTimeout(() => t.style.transform = 'translateX(-50%) translateY(60px)', 2800);
     }
 
-    function fulfilPost(postID) {
-
+    async function fulfilPost(postID) {
+      const formData = new FormData();
+      formData.append('postID',    postID);
+      const response = await fetch('mark_fullfilled.php', { method:'POST', body:formData });
+      if (response.ok) {
+        location.reload();
+      }
     }
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });

@@ -699,14 +699,13 @@
         <div class="field-hint">Minimum 20 characters. Be as descriptive as possible.</div>
         <div class="field-error" id="descriptionError">Please enter a description (at least 20 characters).</div>
       </div>
-
-      <!-- CI Email -->
+      <!-- Contact Email -->
       <div class="form-group">
-        <label for="postEmail">CI Email Address <span class="required">*</span></label>
+        <label for="postEmail">Contact Email <span
+            style="font-weight:400; color:var(--mid-gray);">(optional)</span></label>
         <input type="email" id="postEmail" placeholder="yourname@myci.csuci.edu" />
-        <div class="field-hint">Your email is required so other students can contact you. It will only be visible to
-          logged-in users.</div>
-        <div class="field-error" id="emailError">Please enter a valid @myci.csuci.edu email address.</div>
+        <div class="field-hint">Your email is only visible to logged-in users. Leave blank to remain anonymous.</div>
+        <div class="field-error" id="emailError">Please enter a valid email address.</div>
       </div>
 
       <!-- Photo Upload -->
@@ -831,7 +830,7 @@
   </footer>
 
   <script>
-   function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
+    function ciGetUserID() { try { return JSON.parse(sessionStorage.getItem('userID')); } catch (e) { return null; } }
 
     const userID = ciGetUserID();
     if (!userID) {
@@ -883,6 +882,15 @@
     }
     let selectedType = 'need';
     const CURRENT_USER_ID = sessionStorage.getItem("userID");
+    // Auto-fill email from session
+    const sessionEmail = (() => {
+      try {
+        const u = JSON.parse(sessionStorage.getItem('ci_user'));
+        return u && u.email ? u.email : '';
+      } catch (e) { return ''; }
+    })();
+    const emailField = document.getElementById('postEmail');
+    if (emailField && sessionEmail) emailField.value = sessionEmail;
 
     /* ── Post type toggle ── */
     function selectType(type) {
@@ -890,7 +898,7 @@
       document.getElementById('typeNeed').className =
         'type-option' + (type === 'need' ? ' selected-need' : '');
       document.getElementById('typeHave').className =
-        'type-option' + (type === 'have' ? ' selected-have' : '');
+        'type-option' + (type === 'offering' ? ' selected-have' : '');
       hideError('typeError');
     }
 

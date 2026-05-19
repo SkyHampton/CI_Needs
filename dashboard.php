@@ -522,7 +522,7 @@ try {
       color: var(--crimson);
     }
 
-    .tag-have {
+    .tag-offering {
       background: #eef4fb;
       color: var(--blue);
     }
@@ -866,29 +866,29 @@ try {
                 $stmt = $db->prepare("SELECT * FROM CIN_Post WHERE userID = ?");
                 $stmt->execute([$_SESSION['userID']]);
                 $results = $stmt->fetchAll();
+                
                 foreach ($results as $postRow) {
-                    echo "<div class=\"post-row\">
-                            <div class=\"post-row-info\">
-                                <div class=\"post-row-title\">
-                                <span class=\"tag tag-need\">" . ucfirst($postRow['postType']) . "</span>
-                                {$postRow['postTitle']}
-                                </div>
-                                <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
-                            </div>
-                            <div class=\"post-row-actions\">
-                                <form action=\"mark_fullfilled.php\" method=\"POST\" style=\"display:inline;\">
-                                  <input type=\"hidden\" name=\"postID\" value=\"{$postRow['postID']}\">
-                                  <button class=\"btn-sm btn-fulfill\" type=\"submit\">Fulfilled</button>
-                                </form>
-                                
-                                <button class=\"btn-sm btn-edit\" onclick=\"showToast(' Edit — connect to backend')\">Edit</button>
-                                
-                                <form action=\"graveyard_post.php\" method=\"POST\" style=\"display:inline;\">
-                                  <input type=\"hidden\" name=\"postID\" value=\"{$postRow['postID']}\">
-                                  <button class=\"btn-sm btn-delete\" type=\"submit\">Delete</button>
-                              </form>
-                            </div>
-                            </div>";
+                  if (boolval($postRow['fulfilled'])) {
+                    $post_type = "Fulfilled";
+                    $post_type_tag = "fulfilled";
+                  } else {
+                    $post_type = $postRow['postType'];
+                    $post_type_tag = lcfirst($post_type);
+                  }
+                  echo "<div class=\"post-row\">
+                          <div class=\"post-row-info\">
+                              <div class=\"post-row-title\">
+                              <span class=\"tag tag-$post_type_tag\">" . $post_type . "</span>
+                              {$postRow['postTitle']}
+                              </div>
+                              <div class=\"post-row-meta\">" . ucfirst($postRow['category']); echo " · Posted on {$postRow['postDate']}</div>
+                          </div>
+                          <div class=\"post-row-actions\">
+                              <button class=\"btn-sm btn-fulfill\" onclick=\"fulfilPost({$postRow['postID']})\">Fulfilled</button>
+                              <a href=\"edit-post.php?id={$postRow['postID']}\" class=\"btn-sm btn-edit\">Edit</a>
+                              <button class=\"btn-sm btn-delete\" onclick=\"showToast(' Delete — connect to backend')\">Delete</button>
+                          </div>
+                          </div>";
                 }
             } catch (PDOException $e) {
                 print "Error!: " . $e->getMessage(). "<br/>";
@@ -1151,6 +1151,15 @@ try {
         if (loginLink) loginLink.style.display = 'inline';
         if (logoutLink) logoutLink.style.display = 'none';
         if (userLabel) userLabel.style.display = 'none';
+      }
+    }
+
+    async function fulfilPost(postID) {
+      const formData = new FormData();
+      formData.append('postID',    postID);
+      const response = await fetch('mark_fullfilled.php', { method:'POST', body:formData });
+      if (response.ok) {
+        location.reload();
       }
     }
     ciSyncNav();

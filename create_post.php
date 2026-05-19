@@ -147,7 +147,7 @@ try {
         ":postData"     => $postData,
         ":contact"      => $contact !== "" ? $contact : null,
         ":imagePath"    => $imagePath,
-        ":postDate"     => date('Y-m-d'),
+        ":postDate" => date('Y-m-d H:i:s'),
         ":offerExpDate" => null,
     ]);
 
