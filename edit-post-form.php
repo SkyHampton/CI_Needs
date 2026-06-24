@@ -8,10 +8,10 @@ if (empty($_SESSION['userID'])) {
     exit;
 }
 
-$host     = "137.184.46.194";
-$dbUser   = "cineedsc_sky";
-$password = "N3ph@ndus";
-$database = "cineedsc_db";
+$host = "127.0.0.1";
+$user = "root";
+$password = "Skolekosophy";
+$database = "CINeeds";
 $table    = "CIN_Post";
 
 $postID = (int)($_GET['id'] ?? 0);
@@ -20,7 +20,7 @@ if ($postID <= 0) { header("Location: dashboard.php"); exit; }
 try {
     $db = new PDO(
         "mysql:host=$host;dbname=$database;charset=utf8mb4",
-        $dbUser, $password,
+        $user, $password,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
     $stmt = $db->prepare("SELECT * FROM $table WHERE postID = ?");
@@ -547,10 +547,10 @@ $post_id_int   = (int)$post['postID'];
 
 session_start();
 
-$host     = "137.184.46.194";
-$dbUser   = "cineedsc_sky";
-$password = "N3ph@ndus";
-$database = "cineedsc_db";
+$host = "127.0.0.1";
+$user = "root";
+$password = "Skolekosophy";
+$database = "CINeeds";
 $table    = "CIN_Post";
 
 $uploadDir    = __DIR__ . "/uploads/posts/";
@@ -608,7 +608,7 @@ if (!empty($errors)) {
 try {
     $db = new PDO(
         "mysql:host=$host;dbname=$database;charset=utf8mb4",
-        $dbUser, $password,
+        $user, $password,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 

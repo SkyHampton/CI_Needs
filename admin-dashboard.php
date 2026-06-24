@@ -222,10 +222,10 @@
       </div>
 
       <?php
-      $host = "137.184.46.194";
-      $user = "cineedsc_sky";
-      $password = "N3ph@ndus";
-      $database = "cineedsc_db";
+      $host = "127.0.0.1";
+      $user = "root";
+      $password = "Skolekosophy";
+      $database = "CINeeds";
       $flag_table = "CIN_Flag";
       $post_table = "CIN_Post";
       $user_table = "CIN_User";
@@ -272,11 +272,6 @@
         <div class="admin-card">
 
           <?php
-          #sql server login info
-          $host = "137.184.46.194";
-          $user = "cineedsc_sky";
-          $password = "N3ph@ndus";
-          $database = "cineedsc_db";
           #sql table and foreign key info
           $flag_table = "CIN_Flag";
           $post_table = "CIN_Post";
@@ -418,11 +413,6 @@
         </p>
         <div class="admin-card">
           <?php
-          #sql server login info
-          $host = "137.184.46.194";
-          $user = "cineedsc_sky";
-          $password = "N3ph@ndus";
-          $database = "cineedsc_db";
           #sql table and foreign key info
           $post_table = "CIN_Post";
           $user_table = "CIN_User";
@@ -600,11 +590,6 @@
         </p>
         <div class="admin-card">
           <?php
-          #sql server login info
-          $host = "137.184.46.194";
-          $user = "cineedsc_sky";
-          $password = "N3ph@ndus";
-          $database = "cineedsc_db";
           #sql table and foreign key info
           $graveyard_table = "CIN_Graveyard";
           try {
@@ -642,11 +627,6 @@
         <p class="panel-desc">View and manage user accounts.</p>
         <div class="admin-card">
         <?php
-        #sql server login info
-        $host = "137.184.46.194";
-        $user = "cineedsc_sky";
-        $password = "N3ph@ndus";
-        $database = "cineedsc_db";
         #sql table and foreign key info
         $post_table = "CIN_Post";
         $user_table = "CIN_User";

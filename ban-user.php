@@ -1,8 +1,8 @@
 <?php
-$host = "137.184.46.194";
-$user = "cineedsc_sky";
-$password = "N3ph@ndus";
-$database = "cineedsc_db";
+$host = "127.0.0.1";
+$user = "root";
+$password = "Skolekosophy";
+$database = "CINeeds";
 $userID = $_POST['userID'];
 
 if ($_SERVER["REQUEST_METHOD"]=="POST"){

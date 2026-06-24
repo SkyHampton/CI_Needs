@@ -2,10 +2,10 @@
 session_start();
 
 // ── Database connection + all queries run once at the top ──
-$host      = "137.184.46.194";
-$user      = "cineedsc_sky";
-$password  = "N3ph@ndus";
-$database  = "cineedsc_db";
+$host = "127.0.0.1";
+$user = "root";
+$password = "Skolekosophy";
+$database = "CINeeds";
 $post_table  = "CIN_Post";
 $user_table  = "CIN_User";
 $reply_table = "CIN_Reply";

@@ -1,4 +1,4 @@
-USE cineedsc_db;
+USE CINeeds;
 
 -- =========================
 -- BAN USER

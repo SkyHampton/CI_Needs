@@ -3,10 +3,10 @@
 
 session_start();
 
-$host     = "137.184.46.194";
-$dbUser   = "cineedsc_sky";
-$password = "N3ph@ndus";
-$database = "cineedsc_db";
+$host = "127.0.0.1";
+$user = "root";
+$password = "Skolekosophy";
+$database = "CINeeds";
 $table    = "CIN_Post";
 
 $uploadDir    = __DIR__ . "/uploads/posts/";
@@ -64,7 +64,7 @@ if (!empty($errors)) {
 try {
     $db = new PDO(
         "mysql:host=$host;dbname=$database;charset=utf8mb4",
-        $dbUser, $password,
+        $user, $password,
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 

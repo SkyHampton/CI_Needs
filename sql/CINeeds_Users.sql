@@ -1,4 +1,4 @@
-USE cineedsc_db;
+USE CINeeds;
 
 INSERT INTO CIN_User (email, username, password, admin) VALUES 
 ("john@myci.csuci.edu", "John Doe", "1234", FALSE),

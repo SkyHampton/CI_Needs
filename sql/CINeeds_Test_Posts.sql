@@ -1,4 +1,4 @@
-USE cineedsc_db;
+USE CINeeds;
 
 INSERT INTO CIN_Post (userID, postType, category, postTitle, postData, postDate, offerExpDate) VALUE (1, "need", "food", "Testing", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.", CURRENT_DATE(), null);
 INSERT INTO CIN_Post (userID, postType, category, postTitle, postData, postDate, offerExpDate) VALUE (2, "need", "housing", "Testing", "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.", CURRENT_DATE(), null);
