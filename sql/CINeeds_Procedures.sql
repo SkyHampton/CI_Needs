@@ -14,6 +14,19 @@ END//
 DELIMITER ;
 
 -- =========================
+-- DELETE USER
+-- =========================
+DROP PROCEDURE IF EXISTS delete_user;
+DELIMITER //
+CREATE PROCEDURE delete_user (IN inUserID INT)
+BEGIN
+    DELETE FROM CIN_Reply WHERE userID = inUserID;
+    DELETE FROM CIN_Post WHERE userID = inUserID;
+    DELETE FROM CIN_User WHERE userID = inUserID;
+END//
+DELIMITER ;
+
+-- =========================
 -- FULFILL POST
 -- =========================
 DROP PROCEDURE IF EXISTS fulfill_post;
@@ -90,3 +103,5 @@ DELIMITER ;
 -- CALL flag_post(2, 'Spam', 'Test comment');
 
 -- CALL graveyard_post(1, 1, 'Violation of rules');
+
+-- CALL delete_user(1); 
