@@ -1,10 +1,12 @@
 <?php
 session_start();
 
+$ini_arr = parse_ini_file("ini/dbcred.ini");
+$user = $ini_arr["USER"];
+$password = $ini_arr["PASS"];
+
 // ── Database connection + all queries run once at the top ──
 $host = "127.0.0.1";
-$user = "root";
-$password = "Skolekosophy";
 $database = "CINeeds";
 $post_table  = "CIN_Post";
 $user_table  = "CIN_User";

@@ -1,7 +1,8 @@
 <?php
+$ini_arr = parse_ini_file("ini/dbcred.ini");
+$user = $ini_arr["USER"];
+$password = $ini_arr["PASS"];
 $host = "127.0.0.1";
-$user = "root";
-$password = "Skolekosophy";
 $database = "CINeeds";
 $replyData = $_POST['replyData'];
 $postID = $_POST['postID'];

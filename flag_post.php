@@ -2,9 +2,11 @@
 session_start();
 
 /* ── Configuration ── */
+
+$ini_arr = parse_ini_file("ini/dbcred.ini");
+$user = $ini_arr["USER"];
+$password = $ini_arr["PASS"];
 $host = "127.0.0.1";
-$user = "root";
-$password = "Skolekosophy";
 $database = "CINeeds";
 
 /* ── Helper: send JSON response and exit ── */

@@ -2,10 +2,10 @@
 /* ── edit_post.php — handles POST requests to update an existing post ── */
 
 session_start();
-
+$ini_arr = parse_ini_file("ini/dbcred.ini");
+$user = $ini_arr["USER"];
+$password = $ini_arr["PASS"];
 $host = "127.0.0.1";
-$user = "root";
-$password = "Skolekosophy";
 $database = "CINeeds";
 $table    = "CIN_Post";
 
