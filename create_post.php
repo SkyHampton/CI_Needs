@@ -46,6 +46,7 @@ $postTitle = trim($_POST["postTitle"] ?? "");
 $postData  = trim($_POST["postData"]  ?? "");
 $contact   = trim($_POST["contact"]   ?? "");
 $userID    = (int) ($_POST["userID"]  ?? 0);
+$anon = (int) ($_POST["anon"]  ?? 0);
 
 /* ── Validate required fields ── */
 $errors = [];
@@ -137,8 +138,8 @@ try {
     );
 
     $stmt = $db->prepare(
-        "INSERT INTO $table (userID, postType, category, postTitle, postData, contact, imagePath, postDate, offerExpDate)
-         VALUES (:userID, :postType, :category, :postTitle, :postData, :contact, :imagePath, :postDate, :offerExpDate)"
+        "INSERT INTO $table (userID, postType, category, postTitle, postData, contact, imagePath, postDate, offerExpDate, anon)
+         VALUES (:userID, :postType, :category, :postTitle, :postData, :contact, :imagePath, :postDate, :offerExpDate, :anon)"
     );
 
     $stmt->execute([
@@ -149,6 +150,7 @@ try {
         ":postData"     => $postData,
         ":contact"      => $contact !== "" ? $contact : null,
         ":imagePath"    => $imagePath,
+        ":anon"         => $anon,
         ":postDate" => date('Y-m-d H:i:s'),
         ":offerExpDate" => null,
     ]);

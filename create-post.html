@@ -17,7 +17,7 @@
       --sage: #D6E4D6;
       --sage-dark: #B4CCBA;
       --white: #FFFFFF;
-      --off-white: #F5F5F5;
+      --off-white: hsl(0, 0%, 96%);
       --light-gray: #E8E8E8;
       --mid-gray: #767676;
       --dark: #1A1A1A;
@@ -526,6 +526,58 @@
       opacity: 0.7;
     }
 
+    /* Toggle switch */
+    .toggle {
+      width: 42px;
+      height: 24px;
+      background: var(--light-gray);
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      border: none;
+    }
+
+    .toggle.on {
+      background: var(--blue);
+    }
+
+    .toggle::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle.on::after {
+      left: 21px;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--mid-gray);
+    }
+
+    .empty-state .empty-icon {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
     .footer-col a {
       display: block;
       color: white;
@@ -736,9 +788,14 @@
         <div class="field-hint">Adding a photo helps others understand what you're offering or need.</div>
       </div>
 
+      <div class="form-group">
+      <label for="toggleAnon">Anonymous Post</label>
+      <button id ="toggleAnon" class="toggle off" onclick="this.classList.toggle('on')"></button>
+      </div>
       <hr class="form-divider" />
-
+      
       <!-- Availability -->
+       <!--
       <p class="form-section-title">Availability <span
           style="font-family:'Source Sans 3',sans-serif; font-size:0.82rem; font-weight:400; color:var(--mid-gray); border:none; padding:0;">(optional
           — for pickup or drop-off)</span></p>
@@ -762,6 +819,7 @@
           placeholder='e.g. "Bell Tower area", "Broome Library front entrance", "Vista del Mar dorms"' />
         <div class="field-hint">A general campus location is fine — no need to share a specific room or address.</div>
       </div>
+      -->
 
       <!-- Submit -->
       <div class="form-submit-row">
@@ -956,6 +1014,11 @@
         markField('postEmail', true); valid = false;
       } else { hideError('emailError'); markField('postEmail', false); }
 
+      let anon = 0;
+      if (document.getElementById('toggleAnon').classList.contains('on')) {
+        anon = 1;
+      }
+
       if (!valid) {
         // Scroll to first error
         document.querySelector('.error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -969,6 +1032,7 @@
       formData.append('postTitle', title);
       formData.append('postData', desc);
       formData.append('contact', email);
+      formData.append('anon', anon);
       formData.append('userID', CURRENT_USER_ID);
 
       const fileInput = document.getElementById('postPhoto');
