@@ -156,6 +156,7 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
     .urgent-badge { background:var(--crimson); color:white; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:3px; text-transform:uppercase; letter-spacing:0.04em; }
     .need-card.fulfilled { border-left-color:#2a7a4b; opacity:0.82; }
     .fulfilled-ribbon { display:inline-flex; align-items:center; gap:5px; background:#edf7f2; color:#2a7a4b; border:1.5px solid #a3d9bc; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:3px 10px; border-radius:999px; flex-shrink:0; }
+    .anon-ribbon { display:inline-flex; align-items:center; gap:5px; background:#DDDDDD; color:#FFFFFF; border:1.5px solid #EEEEEE; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:3px 10px; border-radius:999px; flex-shrink:0; }
     .need-card.fulfilled .need-card-top h3 { color:var(--mid-gray); text-decoration:line-through; text-decoration-color:#a3d9bc; }
     .need-card.fulfilled .respond-btn { display:none; }
     .need-card.fulfilled .flag-btn { display:none; }
@@ -336,6 +337,7 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               $category    = htmlspecialchars($post_row['category'], ENT_QUOTES, 'UTF-8');
               $uc_category = ucfirst($category);
               $isFulfilled = (bool)$post_row['fulfilled'];
+              $isAnon = (bool)$post_row['anon'];
               $image_html  = '';
               if (!empty($post_row['imagePath'])) {
                 $si = htmlspecialchars($post_row['imagePath'],  ENT_QUOTES, 'UTF-8');
@@ -349,8 +351,13 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
               $safe_title   = htmlspecialchars($post_row['postTitle'], ENT_QUOTES, 'UTF-8');
               $safe_type   = htmlspecialchars($post_row['postType'],     ENT_QUOTES, 'UTF-8');
               $safe_data    = htmlspecialchars($post_row['postData'],  ENT_QUOTES, 'UTF-8');
-              $safe_user    = htmlspecialchars($post_row['username'],  ENT_QUOTES, 'UTF-8');
-              $safe_email   = htmlspecialchars($post_row['email'],     ENT_QUOTES, 'UTF-8');
+              if ($isAnon) {
+                $safe_user = "Anon";
+                $safe_email = "Anonymous User";
+              } else {
+                $safe_user    = htmlspecialchars($post_row['username'],  ENT_QUOTES, 'UTF-8');
+                $safe_email   = htmlspecialchars($post_row['email'],     ENT_QUOTES, 'UTF-8');
+              }
               $safe_dp      = htmlspecialchars($post_row['postDate'],  ENT_QUOTES, 'UTF-8');
               $post_id      = (int)$post_row['postID'];
 
@@ -385,6 +392,7 @@ $safe_date_to   = htmlspecialchars($searchDateTo,   ENT_QUOTES, 'UTF-8');
                 <div style="display:flex; gap:6px; align-items:center; flex-shrink:0;">
                   <span class="tag tag-<?= $category ?>"><?= $uc_category ?></span>
                   <?php if ($isFulfilled): ?><span class="fulfilled-ribbon"> Fulfilled</span><?php endif; ?>
+                  <?php if ($isAnon): ?><span class="anon-ribbon"> Anonymous</span><?php endif; ?>
                 </div>
               </div>
               <?= $image_html ?>
