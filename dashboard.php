@@ -857,12 +857,12 @@ try {
         <button class="dash-nav-item" onclick="showPanel('comments')">
           <span class="nav-icon"></span> Comments
         </button>
-        <button class="dash-nav-item" onclick="showPanel('messages')">
+        <!-- <button class="dash-nav-item" onclick="showPanel('messages')">
           <span class="nav-icon"></span> Messages
         </button>
         <button class="dash-nav-item" onclick="showPanel('preferences')">
           <span class="nav-icon"></span> Notifications
-        </button>
+        </button> -->
         <button class="dash-nav-item" onclick="showPanel('account')">
           <span class="nav-icon"></span> Account Settings
         </button>
@@ -942,34 +942,6 @@ try {
                 print "Error!: " . $e->getMessage(). "<br/>";
                 die();
             } ?>
-            <!-- <div class="post-row">
-              <div class="post-row-info">
-                <div class="post-row-title">
-                  <span class="tag tag-need">Need</span>
-                  Looking for BIOL 120 textbook
-                </div>
-                <div class="post-row-meta">Academic · Posted 3 days ago</div>
-              </div>
-              <div class="post-row-actions">
-                <button class="btn-sm btn-fulfill" onclick="showToast(' Marked as fulfilled!')">Fulfilled</button>
-                <button class="btn-sm btn-edit" onclick="showToast(' Edit — connect to backend')">Edit</button>
-                <button class="btn-sm btn-delete" onclick="showToast(' Delete — connect to backend')">Delete</button>
-              </div>
-            </div>
-            <div class="post-row">
-              <div class="post-row-info">
-                <div class="post-row-title">
-                  <span class="tag tag-have">Offering</span>
-                  Free clothing — sizes S, M, L
-                </div>
-                <div class="post-row-meta">Clothing · Posted 1 week ago</div>
-              </div>
-              <div class="post-row-actions">
-                <button class="btn-sm btn-fulfill" onclick="showToast(' Marked as fulfilled!')">Fulfilled</button>
-                <button class="btn-sm btn-edit" onclick="showToast(' Edit — connect to backend')">Edit</button>
-                <button class="btn-sm btn-delete" onclick="showToast(' Delete — connect to backend')">Delete</button>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
@@ -1007,33 +979,11 @@ try {
                 print "Error!: " . $e->getMessage(). "<br/>";
                 die();
             } ?>
-          
-          <!-- <div class="message-row msg-unread">
-            <div class="msg-avatar">MC</div>
-            <div class="msg-body">
-              <div class="msg-sender">Maria C.</div>
-              <div class="msg-preview">Are the clothes still available? I'm a size M and could really use some of those.
-              </div>
-            </div>
-            <div class="msg-time">Yesterday</div>
-          </div>
-          <div class="message-row">
-            <div class="msg-avatar">AR</div>
-            <div class="msg-body">
-              <div class="msg-sender">Alex R.</div>
-              <div class="msg-preview">Thanks for the post — I picked up the groceries and it really helped. </div>
-            </div>
-            <div class="msg-time">3 days ago</div>
-          </div>
-          <div
-            style="margin-top:16px; padding-top:16px; border-top:1px solid var(--light-gray); font-size:0.82rem; color:var(--mid-gray);">
-            Full messaging with reply functionality coming in a future sprint.
-          </div> -->
         </div>
       </div>
 
       <!-- MESSAGES PANEL -->
-      <div class="dash-panel" id="panelMessages">
+      <!-- <div class="dash-panel" id="panelMessages">
         <div class="card">
           <div class="panel-header">
             <h2 class="section-title">Messages</h2>
@@ -1042,10 +992,10 @@ try {
             No messages yet. Direct messaging coming soon.
           </p>
         </div>
-      </div>
+      </div> -->
 
       <!-- NOTIFICATIONS PANEL -->
-      <div class="dash-panel" id="panelPreferences">
+      <!-- <div class="dash-panel" id="panelPreferences">
         <div class="card">
           <h2 class="section-title" style="margin-bottom:20px;">Notification Preferences</h2>
           <div class="pref-row">
@@ -1076,12 +1026,12 @@ try {
             </div>
             <button class="toggle on" onclick="this.classList.toggle('on')"></button>
           </div>
-          <div style="margin-top:20px; font-size:0.82rem; color:var(--mid-gray);">
-            Notification delivery (email/in-app) will be configured once the backend is connected.
+          <div style="margin-top:20px; font-size:0.82rem; color:var(--mid-gray);"> -->
+            <!-- Notification delivery (email/in-app) will be configured once the backend is connected. -->
             <!-- TODO: connect to PATCH /api/users/me/preferences -->
-          </div>
+          <!-- </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- ACCOUNT PANEL -->
       <div class="dash-panel" id="panelAccount">
@@ -1092,36 +1042,35 @@ try {
               <div class="pref-label">Change Password</div>
               <div class="pref-desc">Update your CI Needs account password</div>
             </div>
-            <button class="btn-sm btn-edit" onclick="showToast(' Password change — connect to backend')">Change</button>
+            <button class="btn-sm btn-edit" onclick="">Change</button>
           </div>
           <div class="pref-row">
             <div>
-              <div class="pref-label">Email Address</div>
-              <div class="pref-desc" id="accountEmail">Loading…</div>
+              <div class="pref-label">Username</div>
+              <div class="pref-desc" id="accountEmail">Update your CI Needs account username</div>
             </div>
-            <button class="btn-sm btn-edit" onclick="showToast(' Email update — connect to backend')">Update</button>
+            <button class="btn-sm btn-edit" onclick="">Change</button>
           </div>
           <div class="pref-row">
             <div>
               <div class="pref-label">Profile Visibility</div>
-              <div class="pref-desc">Control whether your name is shown on public posts</div>
+              <div class="pref-desc">Control whether people can view your public profile</div>
             </div>
             <button class="toggle on" onclick="this.classList.toggle('on')"></button>
           </div>
           <div class="pref-row">
             <div>
               <div class="pref-label">Delete Account</div>
-              <div class="pref-desc">Permanently remove your account and all posts</div>
+              <div class="pref-desc">Permanently remove your account and all posts and replies</div>
             </div>
             <button class="btn-sm btn-delete"
-              onclick="showToast(' Account deletion — connect to backend')">Delete</button>
+              onclick="">Delete</button>
           </div>
           <div style="margin-top: 20px;">
             <a href="profile.html" class="btn-primary" style="display:inline-block;">Go to Full Profile →</a>
           </div>
         </div>
       </div>
-
     </main>
   </div>
 
